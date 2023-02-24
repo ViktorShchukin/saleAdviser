@@ -1,0 +1,190 @@
+# 
+import realizationDAO
+from datetime import datetime
+
+def createTableFunc (dao, productName):
+	sales = []
+	date = []
+	res = dao.getSalesByName(productName)
+	row = res.fetchone()
+	#print (row,'#')
+	while row != None:
+		parseDate = row[1].split(' ')
+		parseDate = parseDate[0].split('-')
+		dateObject = Argument(int(parseDate[0]), int(parseDate[1]))
+		#print(f'==========={dateObject}')
+		sales.append(row[0])
+		#print(sales)
+		date.append(dateObject)
+		#print(date)
+		row = res.fetchone()
+	return sales, date
+	
+
+class TableFunction:
+	def __init__(self, arg, func):
+		self.arg = arg
+		self.f = func
+	def value(self, x):
+		result = 0
+		if x <= self.arg[0]:
+			result = self.f[0]
+		elif x >= self.arg[len(self.arg)-1] :
+			result = self.f[len(self.arg)-1]
+		else :
+			for i in range(len(self.arg)-1) :
+				if x == self.arg[i]:
+					result = self.f[i]
+					break 
+				else :
+					if x > self.arg[i] and x < self.arg[i+1]:
+						result = self.f[i]+(self.f[i+1]-self.f[i])*(x-self.arg[i])/(self.arg[i+1]-self.arg[i])
+						break 
+		return result		
+
+	def derivative(self, arg):
+		pass #todo
+
+class Argument:
+	def __init__(self, year: int, month: int):
+		self.year = year
+		self.month = month
+
+	def __add__ (self, o):
+		return self.add(o)
+
+	def __sub__(self, o):
+		return self.minus(o)
+
+	def __gt__ (self, o):
+		return self.greaterThan(o)
+
+	def __ge__ (self, o):
+		return self.greaterThanOrEqual(o)
+
+	def __lt__ (self, o):
+		return self.lessThan(o)
+
+	def __le__ (self, o):
+		return self.lessThanOrEqual(o)
+
+	def __eq__ (self, o):
+		return self.equal(o)
+
+	def __ne__ (self, o):
+		return self.notEqual(o)
+
+	def __str__ (self):
+		return f"{self.year}-{self.month}"
+
+	def add(self, o):
+		res = self.month + o
+		year = res // 12
+		self.year += year 
+		self.month = res % 12
+		#normaliseToDo
+		return Argument(self.year, self.month)
+
+	def minus(self, o) -> int:
+		deltaYear = self.year - o.year
+		if deltaYear == 0:
+			deltaMonth = self.month - o.month
+		else:
+			deltaMonth = deltaYear*12 + self.month - o.month
+		return deltaMonth
+
+	def greaterThan(self, o) -> bool:
+		if self.minus(o) > 0:
+			return True
+		else:
+			return False
+
+	def lessThan(self, o) -> bool:
+		if self.minus(o) < 0:
+			return True
+		else:
+			return False
+
+	def greaterThanOrEqual(self, o) -> bool:
+		if self.minus(o) >= 0:
+			return True 
+		else:
+			return False
+
+	def lessThanOrEqual(self, o) -> bool:
+		if self.minus(o) <= 0:
+			return True 
+		else:
+			return False
+
+	def equal(self, o) -> bool:
+		if self.minus(o) == 0:
+			return True
+		else:
+			return False
+
+	def notEqual(self, o) -> bool:
+		if self.minus(o) != 0:
+			return True
+		else:
+			return False
+
+
+def testArgument():
+	november22 = Argument(2022, 10)
+	junary23 = Argument(2023, 1)
+	gap = junary23.minus(november22)
+	reversGap = november22.minus(junary23)
+	gap2 = junary23 - november22
+	reversGap2 = november22 - junary23
+	if gap != 3:
+		raise RuntimeError('gap!=3')
+	if reversGap != -3:
+		raise RuntimeError('gap!=-3')
+	if gap2 != 3:
+		raise RuntimeError('gap2!=3')
+	if reversGap2 != -3:
+		raise RuntimeError('gap2!=-3')
+
+def testArgument0():
+	audust22 = Argument(2022, 8)
+	audust22_1 = Argument(2022, 8)
+	gap2 = audust22 - audust22_1
+	if gap2 != 0:
+		raise RuntimeError('gap2!=0')
+
+
+
+def lagrangePolinomial(sales, date):
+	pass
+
+
+class Function:
+	pass
+
+
+if __name__ == "__main__":
+	
+	dao = realizationDAO.DAO('moms1.db')
+	sales, date = createTableFunc(dao, 'Аксессуары')
+	
+	tableFuncJunApr = TableFunction(date, sales)
+
+	may21 = Argument(2021, 5)
+
+	october20 = Argument(2020, 10)
+
+	print("sales(may21) =", tableFuncJunApr.value(may21))
+
+	print("sales(october20) =", tableFuncJunApr.value(october20))
+
+	testArgument()
+
+	testArgument0()
+
+	res = may21 + 25
+	print (res)
+
+
+
+	

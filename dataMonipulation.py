@@ -50,7 +50,7 @@ class Argument:
 	def __init__(self, year: int, month: int):
 		self.year = year
 		self.month = month
-		#made specification for input data todo
+		#make specification for input data todo
 	def __add__ (self, o):
 		return self.add(o)
 

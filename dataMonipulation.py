@@ -1,6 +1,6 @@
 # 
 import realizationDAO
-from datetime import datetime
+
 
 def createTableFunc (dao, productName):
 	sales = []
@@ -25,6 +25,7 @@ class TableFunction:
 	def __init__(self, arg, func):
 		self.arg = arg
 		self.f = func
+
 	def value(self, x):
 		result = 0
 		if x <= self.arg[0]:
@@ -49,7 +50,7 @@ class Argument:
 	def __init__(self, year: int, month: int):
 		self.year = year
 		self.month = month
-
+		#made specification for input data todo
 	def __add__ (self, o):
 		return self.add(o)
 
@@ -82,7 +83,6 @@ class Argument:
 		year = res // 12
 		self.year += year 
 		self.month = res % 12
-		#normaliseToDo
 		return Argument(self.year, self.month)
 
 	def minus(self, o) -> int:
@@ -156,11 +156,7 @@ def testArgument0():
 
 
 def lagrangePolinomial(sales, date):
-	pass
-
-
-class Function:
-	pass
+	pass #todo
 
 
 if __name__ == "__main__":
@@ -185,6 +181,6 @@ if __name__ == "__main__":
 	res = may21 + 25
 	print (res)
 
-
+	#readAboutHowToDoTests todo
 
 	

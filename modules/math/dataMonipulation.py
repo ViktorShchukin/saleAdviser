@@ -1,5 +1,5 @@
 # 
-import realizationDAO
+import modules.DAO.realizationDAO as realizationDAO
 
 
 def createTableFunc (dao, productName: str) :

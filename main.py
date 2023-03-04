@@ -1,5 +1,5 @@
-import realizationDAO
-import convert 
+import modules.DAO.realizationDAO as realizationDAO
+import modules.convertRowsFromDb.convert as convert 
 
 if __name__ == "__main__":
 

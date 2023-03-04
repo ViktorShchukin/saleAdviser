@@ -2,13 +2,13 @@
 import realizationDAO
 
 
-def createTableFunc (dao, productName):
+def createTableFunc (dao, productName: str) :
 	sales = []
 	date = []
 	res = dao.getSalesByName(productName)
 	row = res.fetchone()
-	#print (row,'#')
-	while row != None:
+	while row != None :
+		print (row,'#')
 		parseDate = row[1].split(' ')
 		parseDate = parseDate[0].split('-')
 		dateObject = Argument(int(parseDate[0]), int(parseDate[1]))
@@ -21,32 +21,37 @@ def createTableFunc (dao, productName):
 	return sales, date
 	
 
-class TableFunction:
-	def __init__(self, arg, func):
+class TableFunction :
+	def __init__(self, arg, func) :
 		self.arg = arg
 		self.f = func
 
-	def value(self, x):
+	def value(self, x) :
 		result = 0
-		if x <= self.arg[0]:
+		if x <= self.arg[0] :
 			result = self.f[0]
-		elif x >= self.arg[len(self.arg)-1] :
-			result = self.f[len(self.arg)-1]
+		elif x >= self.arg[len(self.arg) - 1] :
+			result = self.f[len(self.arg) - 1]
 		else :
-			for i in range(len(self.arg)-1) :
-				if x == self.arg[i]:
+			for i in range(len(self.arg) - 1) :
+				if x == self.arg[i] :
 					result = self.f[i]
 					break 
 				else :
-					if x > self.arg[i] and x < self.arg[i+1]:
-						result = self.f[i]+(self.f[i+1]-self.f[i])*(x-self.arg[i])/(self.arg[i+1]-self.arg[i])
+					if x > self.arg[i] and x < self.arg[i + 1] :
+						result = self.f[i] + (self.f[i+1]-self.f[i]) * (x - self.arg[i]) / (self.arg[i+1] - self.arg[i])
 						break 
 		return result		
 
-	def derivative(self, arg):
-		pass #todo
+	def derivative(self, arg0) :
+		func0 = self.value(arg0)
+		arg1 = arg0 - Argument (0, 1)
+		print ('вычитание внитри дериватива =', arg1)
+		func1 = self.value(arg1)
+		derivative = (func1 - func0) / (arg1 - arg0)
+		return derivative #todo доделать 
 
-class Argument:
+class Argument :
 	def __init__(self, year: int, month: int):
 		self.year = year
 		self.month = month
@@ -56,6 +61,7 @@ class Argument:
 
 	def __sub__(self, o):
 		return self.minus(o)
+		#todo проверять тип входа, есть встроенная функция 
 
 	def __gt__ (self, o):
 		return self.greaterThan(o)
@@ -92,6 +98,10 @@ class Argument:
 		else:
 			deltaMonth = deltaYear*12 + self.month - o.month
 		return deltaMonth
+
+	def shift(self, i: int) :
+		#todo сдвиг на один месяц
+		pass
 
 	def greaterThan(self, o) -> bool:
 		if self.minus(o) > 0:
@@ -130,7 +140,7 @@ class Argument:
 			return False
 
 
-def testArgument():
+def testArgument() :
 	november22 = Argument(2022, 10)
 	junary23 = Argument(2023, 1)
 	gap = junary23.minus(november22)
@@ -146,41 +156,51 @@ def testArgument():
 	if reversGap2 != -3:
 		raise RuntimeError('gap2!=-3')
 
-def testArgument0():
+def testArgument0() :
 	audust22 = Argument(2022, 8)
 	audust22_1 = Argument(2022, 8)
 	gap2 = audust22 - audust22_1
 	if gap2 != 0:
 		raise RuntimeError('gap2!=0')
 
+def testTableFunctionValueMethod () :
+	sales, date = createTableFunc(dao, 'Аксессуары')
+	tableFuncJunApr = TableFunction(date, sales)
+	may21 = Argument(2021, 5)
+	october20 = Argument(2020, 10)
+	if tableFuncJunApr.value(may21) != 71:
+		raise RuntimeError('ошибка в рассчетах табличной функции1')
+	if tableFuncJunApr.value(october20) != 19:
+		raise RuntimeError('ошибка в рассчетах табличной функции2')
+	
+def testTableFunctionDerivativeMethod () :
+	sales, date = createTableFunc(dao, 'Аксессуары')
+	tableFuncJunApr = TableFunction(date, sales)
+	april21 = Argument (2021, 4)
+	march21 = Argument (2021, 3)
+	print (tableFuncJunApr.derivative(march21))
+	print (tableFuncJunApr.derivative(april21))
 
+	pass
 
-def lagrangePolinomial(sales, date):
+def lagrangePolinomial (sales, date) :
 	pass #todo
 
 
-if __name__ == "__main__":
+if __name__ == "__main__" :
 	
 	dao = realizationDAO.DAO('moms1.db')
-	sales, date = createTableFunc(dao, 'Аксессуары')
-	
-	tableFuncJunApr = TableFunction(date, sales)
 
-	may21 = Argument(2021, 5)
+	testArgument ()
 
-	october20 = Argument(2020, 10)
+	testArgument0 ()
 
-	print("sales(may21) =", tableFuncJunApr.value(may21))
+	testTableFunctionValueMethod ()
 
-	print("sales(october20) =", tableFuncJunApr.value(october20))
-
-	testArgument()
-
-	testArgument0()
-
-	res = may21 + 25
-	print (res)
+	#testTableFunctionDerivativeMethod ()
 
 	#readAboutHowToDoTests todo
+	#pip прочитать про утилиту и env(собирать проект) 
+	#
 
 	

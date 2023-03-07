@@ -8,13 +8,13 @@ def createTableFunc (dao, productName: str) :
 	res = dao.getSalesByName(productName)
 	row = res.fetchone()
 	while row != None :
-		print (row,'#')
+		#print (row,'#')
 		parseDate = row[1].split(' ')
 		parseDate = parseDate[0].split('-')
 		dateObject = Argument(int(parseDate[0]), int(parseDate[1]))
 		#print(f'==========={dateObject}')
 		sales.append(row[0])
-		#print(sales)
+		print('sales = ', sales)
 		date.append(dateObject)
 		#print(date)
 		row = res.fetchone()
@@ -28,7 +28,7 @@ class TableFunction :
 
 	def value(self, x) :
 		result = 0
-		if x <= self.arg[0] :
+		if x <= self.arg[0]:
 			result = self.f[0]
 		elif x >= self.arg[len(self.arg) - 1] :
 			result = self.f[len(self.arg) - 1]
@@ -45,10 +45,10 @@ class TableFunction :
 
 	def derivative(self, arg0) :
 		func0 = self.value(arg0)
-		arg1 = arg0 - Argument (0, 1)
+		arg1 = arg0 - 1
 		print ('вычитание внитри дериватива =', arg1)
 		func1 = self.value(arg1)
-		derivative = (func1 - func0) / (arg1 - arg0)
+		derivative = (func1 - func0) / (arg1.deltaMonth(arg0))
 		return derivative #todo доделать 
 
 class Argument :
@@ -84,57 +84,81 @@ class Argument :
 	def __str__ (self):
 		return f"{self.year}-{self.month}"
 
-	def add(self, o):
-		res = self.month + o
-		year = res // 12
-		self.year += year 
-		self.month = res % 12
-		return Argument(self.year, self.month)
-
-	def minus(self, o) -> int:
-		deltaYear = self.year - o.year
-		if deltaYear == 0:
-			deltaMonth = self.month - o.month
+	def add(self, o) :
+		if type(o) == int:
+			res = self.month + o
+			year = res // 12
+			year1 = self.year + year 
+			month1 = res % 12
+			return Argument(year1, month1)
 		else:
-			deltaMonth = deltaYear*12 + self.month - o.month
-		return deltaMonth
+			res = self.month + o.month
+			year = res // 12
+			year1 = self.year + o.year + year 
+			month1 = res % 12
+			return Argument(year1, month1)
 
-	def shift(self, i: int) :
-		#todo сдвиг на один месяц
-		pass
+	def minus(self, o) :
+		if type(o) == int:
+			res = self.year*12 + self.month - o
+			year1 = res // 12
+			month1 = res % 12
+			return Argument(year1, month1)
+		else:
+			deltaYear = self.year - o.year
+			if deltaYear == 0:
+				deltaMonth = self.month - o.month
+				return Argument(deltaYear, deltaMonth)
+			else:
+				deltaMonth = deltaYear*12 + self.month - o.month
+				year1 = deltaMonth // 12
+				month1 = deltaMonth % 12
+				return Argument(year1, month1)
+
+	def deltaMonth(self, o)-> int:
+		if type(o) == int:
+			deltaMonth = self.year*12 + self.month - o
+		else:
+			deltaYear = self.year - o.year
+			if deltaYear == 0:
+				deltaMonth = self.month - o.month
+			else:
+				deltaMonth = deltaYear*12 + self.month - o.month
+			return deltaMonth
+
 
 	def greaterThan(self, o) -> bool:
-		if self.minus(o) > 0:
+		if self.deltaMonth(o) > 0:
 			return True
 		else:
 			return False
 
 	def lessThan(self, o) -> bool:
-		if self.minus(o) < 0:
+		if self.deltaMonth(o) < 0:
 			return True
 		else:
 			return False
 
 	def greaterThanOrEqual(self, o) -> bool:
-		if self.minus(o) >= 0:
+		if self.deltaMonth(o) >= 0:
 			return True 
 		else:
 			return False
 
 	def lessThanOrEqual(self, o) -> bool:
-		if self.minus(o) <= 0:
+		if self.deltaMonth(o) <= 0:
 			return True 
 		else:
 			return False
 
 	def equal(self, o) -> bool:
-		if self.minus(o) == 0:
+		if self.deltaMonth(o) == 0:
 			return True
 		else:
 			return False
 
 	def notEqual(self, o) -> bool:
-		if self.minus(o) != 0:
+		if self.deltaMonth(o) != 0:
 			return True
 		else:
 			return False
@@ -143,24 +167,28 @@ class Argument :
 def testArgument() :
 	november22 = Argument(2022, 10)
 	junary23 = Argument(2023, 1)
-	gap = junary23.minus(november22)
-	reversGap = november22.minus(junary23)
+	gap = junary23.deltaMonth(november22)
+	reversGap = november22.deltaMonth(junary23)
 	gap2 = junary23 - november22
 	reversGap2 = november22 - junary23
+	gap3 = junary23 + november22
+	reversGap3 = november22 + junary23
 	if gap != 3:
 		raise RuntimeError('gap!=3')
 	if reversGap != -3:
 		raise RuntimeError('gap!=-3')
-	if gap2 != 3:
+	if gap2 != Argument(0, 3):
 		raise RuntimeError('gap2!=3')
-	if reversGap2 != -3:
+	if reversGap2 != Argument(0, -3):
 		raise RuntimeError('gap2!=-3')
+	if gap3 != Argument(4045, 11):
+		raise RuntimeError('gap3 != 4045-11')
 
 def testArgument0() :
 	audust22 = Argument(2022, 8)
 	audust22_1 = Argument(2022, 8)
 	gap2 = audust22 - audust22_1
-	if gap2 != 0:
+	if gap2 != Argument(0, 0):
 		raise RuntimeError('gap2!=0')
 
 def testTableFunctionValueMethod () :
@@ -172,7 +200,7 @@ def testTableFunctionValueMethod () :
 		raise RuntimeError('ошибка в рассчетах табличной функции1')
 	if tableFuncJunApr.value(october20) != 19:
 		raise RuntimeError('ошибка в рассчетах табличной функции2')
-	
+		
 def testTableFunctionDerivativeMethod () :
 	sales, date = createTableFunc(dao, 'Аксессуары')
 	tableFuncJunApr = TableFunction(date, sales)
@@ -197,10 +225,10 @@ if __name__ == "__main__" :
 
 	testTableFunctionValueMethod ()
 
-	#testTableFunctionDerivativeMethod ()
+	testTableFunctionDerivativeMethod ()
 
 	#readAboutHowToDoTests todo
-	#pip прочитать про утилиту и env(собирать проект) 
+	#pip(done) прочитать про утилиту и env(собирать проект) 
 	#
-
+	
 	

@@ -1,6 +1,8 @@
 #
 import sqlite3
 import uuid
+from modules.adviserModel.product import Product
+from modules.adviserModel.sale import Sale
 
 CREATE_REALIZATION_TABLE_QUERY = """
 create table if not exists realization (
@@ -36,9 +38,25 @@ class DAO:
 		self.sql.execute(QUERY, (productId, productName))
 		return productId
 
-	def saveToDb (self, realizationId, productId, quantity, total, saleMonth):
-		QUERY= "insert into realization (id,product_id,quantity,total,sale_month) values (?,?,?,?,?)"
-		self.sql.execute(QUERY, (realizationId,productId,quantity,total,saleMonth))
+	def saveToDb (self, productId, quantity, total, saleMonth):
+		QUERY= """insert into realization (id,product_id,quantity,total,sale_month) values (?,?,?,?,?)"""
+		saleId = str(uuid.uuid4())
+		self.sql.execute(QUERY, (saleId, productId, quantity, total, saleMonth))
+		return saleId
+
+	def updateProduct(self, product):
+		QUERY = """ update product set name=? where id=?"""
+		self.sql.execute(QUERY, (product.name, product.productId))
+
+	def deleteProduct(self, productId):
+		QUERY = """delete from product where id=? """
+		res = self.sql.execute(QUERY, (productId, ))
+		return res.rowcount
+
+	def deleteSale(self, productId, saleId):
+		QUERY = """delete from realization where id=? and product_id=?"""
+		res = self.sql.execute(QUERY, (saleId, productId))
+		return res.rowcount
 
 	def checkProductExist(self, productName)->str:
 		QUERY = "select id from product where name=?"
@@ -63,10 +81,56 @@ class DAO:
 		self.sql.execute(CREATE_PRODUCT_TABLE_QUERY)
 
 	def getSalesByName(self, productName):
-		QUERY = """select quantity,sale_month from realization where product_Id=? """
+		QUERY = """select quantity,sale_month from realization where product_id=? """
 		productId = (self.getProductIdOrCreate(productName),)
 		res = self.sql.execute(QUERY, productId)
 		return res
+
+	def getProductAll(self):
+		QUERY = """select id,name from product"""
+		res = self.sql.execute(QUERY)
+		row = res.fetchone()
+		products = list()
+		while row != None:
+			product = Product(row[0], row[1])
+			products.append(product)
+			row = res.fetchone()  
+		return products
+
+	def getProductById(self, productId):
+		QUERY = """select id,name from product where id=?"""
+		res = self.sql.execute(QUERY, (productId,))
+		row = res.fetchone()
+		if row == None:
+			return None
+		else:
+			return Product(row[0], row[1])
+
+	def getAllSalesByProductId(self, productId):
+		QUERY = """select * from realization where product_id=?"""
+		res = self.sql.execute(QUERY, (productId, ))
+		row = res.fetchone()
+		sales = list()
+		while row != None:
+			sale = Sale(row[0], row[1], row[2], row[3], row[4])
+			sales.append(sale)
+			row = res.fetchone()  
+		return sales
+
+	def getSaleById(self, productId, saleId):
+		QUERY = """select id, product_id, quantity, total, sale_month from realization where id=? and product_id=?"""
+		res = self.sql.execute(QUERY, (saleId, productId))
+		row = res.fetchone()
+		if row == None:
+			return None
+		else:
+			return Sale(row[0], row[1], row[2], row[3], row[4])
+
+	def updateSale(self, sale):
+		QUERY = """update realization set quantity=?, total=?, sale_month=? where product_id=? and id=?"""
+		self.sql.execute(QUERY, (sale.quantity, sale.total, sale.saleMonth, sale.productId, sale.saleId))
+
+
 
 
 

@@ -5,6 +5,7 @@ __pycache__/
 
 #MyTestFiels
 moms1.db
+testDAO.db
 
 # C extensions
 *.so

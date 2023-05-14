@@ -13,7 +13,7 @@ def convertLine(line):
 	date = datetime.strptime(columns[3].strip(), '%d.%m.%Y')
 	return (str(uuid.uuid4()), name, quantity, total, date)
 
-
+#переделать функцию т.к изменился метод в realizationDAO todo
 def saveFileToDb(dao, fileName):
 	file = open(fileName,"r")
 	line = file.readline()

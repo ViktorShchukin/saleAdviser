@@ -1,0 +1,8 @@
+#!/bin/bash
+
+#script for bash wich set some variables to start working with this app 
+
+. env/Scripts/activate
+
+export PYTHONPATH=/c/program1/gitHub-projects/saleAdviser/
+export FLASK_APP=server/server

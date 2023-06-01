@@ -1,18 +1,13 @@
-#
+from server.modules.DAO.ORMmodel import Product, Sale
 import uuid
 
-import sqlalchemy as sa
-from sqlalchemy.orm import Session
-
-from server.modules.DAO.DAOInterface import DAOProduct, DAOSale
-from server.modules.DAO.ORMmodel import Product, Sale
 
 
-class DAOProductSQLite3(DAOProduct): # todo доделать реализации методов с алчеми
 
-	def __init__(self, engine: sa.Engine):  
-		self.engine = engine
-		
+
+
+class DAOProduct:
+	"""todo сделать документацию к классу и методам"""
 
 	def addProduct(self, productName: str) -> uuid.UUID:
 		#return productId
@@ -29,11 +24,9 @@ class DAOProductSQLite3(DAOProduct): # todo доделать реализаци�
 		#return List(Product)
 		pass
 
-	def getProductById(self, productId: str) -> Product:
-		with Session(self.engine) as session:
-			product = session.scalars(select(Product).where(Product.id == productId)) #todo сделать селект продукта из бд 
-			#session.commit()
-			return Product
+	def getProductById(self, productId: uuid.UUID) -> Product:
+		#return Product
+		pass
 		
 
 	def checkProductExistByName(self, productName: str) -> uuid.UUID:
@@ -41,11 +34,9 @@ class DAOProductSQLite3(DAOProduct): # todo доделать реализаци�
 		pass
 
 
-class DAOSaleSQLite3(DAOSale): # todo доделать реализации методов с алчеми
-
-	def __init__(self, engine):
-		self.engine = engine
-
+class DAOSale:
+	"""todo сделать документацию к классу и методам"""
+	
 	def addSaleByProductName(self, productName: str) -> uuid.UUID:
 		#return saleId
 		pass
@@ -63,13 +54,9 @@ class DAOSaleSQLite3(DAOSale): # todo доделать реализации ме
 		pass
 
 	def getSaleByProductNameAndSaleId(self, productName: str, saleId: uuid.UUID) -> Sale:
-		with Session(self.engine) as session:
-			#sale = session.select #todo сделать селект продукта из бд 
-			#session.commit()
-			return Sale
-		
+		#return Sale
+		pass
 
 	def checkSaleExistByProductNameAndDate(self, productName: str, saleDate: uuid.UUID) -> uuid.UUID:
 		#return saleId
 		pass
-

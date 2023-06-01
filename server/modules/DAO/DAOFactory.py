@@ -1,5 +1,5 @@
 # 
-import sqlalchemy as db
+import sqlalchemy as sa
 
 from server.modules.DAO.DAOinterface import DAOProduct, DAOSale
 from server.modules.DAO.SQLite3DAO import DAOProductSQLite3 
@@ -13,7 +13,7 @@ class DAOFactory:
 		self.config = config 
 		
 	def initConection(self):
-		self.engine = db.create_engine(self.config.getParam("connectionString"))
+		self.engine = sa.create_engine(self.config.getParam("connectionString"))
 		
 
 	def getDAOProduct(self) -> DAOProduct:

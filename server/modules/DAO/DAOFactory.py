@@ -2,7 +2,7 @@
 import sqlalchemy as sa
 
 from server.modules.DAO.DAOinterface import DAOProduct, DAOSale
-from server.modules.DAO.SQLite3DAO import DAOProductSQLite3 
+from server.modules.DAO.SQLite3DAO import DAOProductSQLite3, DAOSaleSQLite3
 from server.config.Config import Config
 
 #generaltodo изменить все под стандарты пип8 пока еще не очень много написано 
@@ -23,7 +23,10 @@ class DAOFactory:
 			raise RuntimeError("неизвастная база данных ") 
 
 	def getDAOSale(self) -> DAOSale:
-		return DAOProductSQLite3(self.engine)		
+if self.config.getParam("databaseName") == "SQLite3":
+			return DAOSaleSQLite3(self.engine)
+		else:
+			raise RuntimeError("неизвастная база данных ")		
 
 
 	 

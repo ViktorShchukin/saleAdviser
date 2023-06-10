@@ -14,25 +14,33 @@ class DAOProductSQLite3(DAOProduct): # todo доделать реализаци�
 		self.engine = engine
 		
 
-	def addProduct(self, productName: str) -> uuid.UUID:
+	def addProduct(self, product: Product) -> uuid.UUID: 
+		with Session(self.engine) as session:
+			result = session.scalars(insert(product))
+			session.commit()
+			return result.id
 		#return productId
-		pass
 
 	def deleteProductById(self, productId: uuid.UUID) -> int:
+		with Session(self.engine) as session:
+			result = session.scalars(delete(Product).where(Product.id.in_(productId))) #todo протестировать все методы
+			session.commit()
+			return len(result)
 		#return кол-во удаленных кортежей 
-		pass
 
 	def updateProductById(self, productId: uuid.UUID) -> int:
-		pass
+		with Session(self.engine) as session:
+			result = session.scalars(update(Product).where(Product.id.in_(productId)).values(product_name = "")) #todo доделать строку и спросить что лучше передавать продуктайди или сам продукт 
+			session.commit()
 
 	def getAllProduct(self, ) -> list:
 		#return List(Product)
 		pass
 
-	def getProductById(self, productId: str) -> Product:
+	def getProductById(self, productId: uuid.UUID) -> Product:
 		with Session(self.engine) as session:
 			product = session.scalars(select(Product).where(Product.id == productId)) #todo сделать селект продукта из бд 
-			#session.commit()
+			session.commit()
 			return Product
 		
 
@@ -72,4 +80,6 @@ class DAOSaleSQLite3(DAOSale): # todo доделать реализации ме
 	def checkSaleExistByProductNameAndDate(self, productName: str, saleDate: uuid.UUID) -> uuid.UUID:
 		#return saleId
 		pass
+
+
 

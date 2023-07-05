@@ -5,7 +5,6 @@ __pycache__/
 *$py.class
 
 #MyTestFiels
-moms1.db
 testDAO.db
 
 # C extensions

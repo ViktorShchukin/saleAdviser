@@ -8,7 +8,7 @@ from server.modules.DAO.DAOInterface import DAOProduct, DAOSale
 from server.modules.DAO.ORMmodel import Product, Sale
 
 
-class DAOProductSQLite3(DAOProduct): # todo доделать реализации методов с алчеми
+class DAOProduct(DAOProduct): # todo доделать реализации методов с алчеми
 
 	def __init__(self, engine: sa.Engine):  
 		self.engine = engine
@@ -49,7 +49,7 @@ class DAOProductSQLite3(DAOProduct): # todo доделать реализаци�
 		pass
 
 
-class DAOSaleSQLite3(DAOSale): # todo доделать реализации методов с алчеми
+class DAOSale(DAOSale): # todo доделать реализации методов с алчеми
 
 	def __init__(self, engine):
 		self.engine = engine

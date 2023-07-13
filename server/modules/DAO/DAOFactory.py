@@ -1,8 +1,8 @@
 # 
 import sqlalchemy as sa
 
-from server.modules.DAO.DAOinterface import DAOProduct, DAOSale
-from server.modules.DAO.SQLite3DAO import DAOProductSQLite3, DAOSaleSQLite3
+import server.modules.DAO.DAOInterface as interface
+from server.modules.DAO.DAOSQLAlchemy import DAOProduct, DAOSale
 from server.config.Config import Config
 
 #generaltodo изменить все под стандарты пип8 пока еще не очень много написано 
@@ -12,21 +12,19 @@ class DAOFactory:
 	def __init__(self, config: Config):
 		self.config = config 
 		
-	def initConection(self):
+	def initConection(self,):
 		self.engine = sa.create_engine(self.config.getParam("connectionString"))
 		
 
-	def getDAOProduct(self) -> DAOProduct:
+	def getDAOProduct(self,) -> interface.DAOProduct:
 		if self.config.getParam("databaseName") == "SQLite3":
-			return DAOProductSQLite3(self.engine)
+			return DAOProduct(self.engine)
 		else:
 			raise RuntimeError("неизвастная база данных ") 
 
-	def getDAOSale(self) -> DAOSale:
-if self.config.getParam("databaseName") == "SQLite3":
-			return DAOSaleSQLite3(self.engine)
+	def getDAOSale(self,) -> interface.DAOSale:
+		if self.config.getParam("databaseName") == "SQLite3":
+			return DAOSale(self.engine)
 		else:
 			raise RuntimeError("неизвастная база данных ")		
 
-
-	 

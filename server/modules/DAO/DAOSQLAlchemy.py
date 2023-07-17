@@ -4,31 +4,37 @@ import uuid
 import sqlalchemy as sa
 from sqlalchemy.orm import Session
 
+from server.modules.adviserModel.product import Product
+from server.modules.adviserModel.sale import Sale
 from server.modules.DAO.DAOInterface import DAOProduct, DAOSale
-from server.modules.DAO.ORMmodel import Product, Sale
+import server.modules.DAO.ormmodel.ORMmodel as orm
+from server.modules.DAO.mapper.mapperProduct import MapperProduct
 
 
 class DAOProduct(DAOProduct): # todo доделать реализации методов с алчеми
 
-	def __init__(self, engine: sa.Engine):  
+	def __init__(self, engine: sa.Engine): 
 		self.engine = engine
 		
 
-	def addProduct(self, product: Product) -> uuid.UUID: 
+	def addProduct(self, product: Product) -> uuid.UUID:
+		mapper = MapperProduct(product)
+		mappedProduct = mapper.toSQLAlchemy()
 		with Session(self.engine) as session:
-			result = session.scalars(insert(product))
+			session.add(mappedProduct)
+			result = session.scalar(sa.select(orm.Product).where(orm.Product.id == mappedProduct.id))
 			session.commit()
 			return result.id
 		#return productId
 
-	def deleteProductById(self, productId: uuid.UUID) -> int:
+	def deleteProductById(self, product: Product) -> int:
 		with Session(self.engine) as session:
 			result = session.scalars(delete(Product).where(Product.id.in_(productId))) #todo протестировать все методы
 			session.commit()
 			return len(result)
 		#return кол-во удаленных кортежей 
 
-	def updateProductById(self, productId: uuid.UUID) -> int:
+	def updateProductById(self, product: Product) -> int:
 		with Session(self.engine) as session:
 			result = session.scalars(update(Product).where(Product.id.in_(productId)).values(product_name = "")) #todo доделать строку и спросить что лучше передавать продуктайди или сам продукт 
 			session.commit()
@@ -37,14 +43,14 @@ class DAOProduct(DAOProduct): # todo доделать реализации ме�
 		#return List(Product)
 		pass
 
-	def getProductById(self, productId: uuid.UUID) -> Product:
+	def getProductById(self, product: Product) -> Product:
 		with Session(self.engine) as session:
 			product = session.scalars(select(Product).where(Product.id == productId)) #todo сделать селект продукта из бд 
 			session.commit()
 			return Product
 		
 
-	def checkProductExistByName(self, productName: str) -> uuid.UUID:
+	def checkProductExistByName(self, product: Product) -> uuid.UUID:
 		#return productId
 		pass
 

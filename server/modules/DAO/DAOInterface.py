@@ -1,62 +1,63 @@
-from server.modules.DAO.ORMmodel import Product, Sale
+#
+
 import uuid
 
-
-
+from server.modules.adviserModel.product import Product
+from server.modules.adviserModel.sale import Sale
 
 
 
 class DAOProduct:
-	"""todo сделать документацию к классу и методам"""
+	"""standart interface for DAOProduct object"""
 
-	def addProduct(self, productName: str) -> uuid.UUID:
+	def addProduct(self, product: Product) -> uuid.UUID:#todo return new product object
 		#return productId
 		pass
 
-	def deleteProductById(self, productId: uuid.UUID) -> int:
+	def deleteProductById(self, product: Product) -> int:
 		#return кол-во удаленных кортежей 
 		pass
 
-	def updateProductById(self, productId: uuid.UUID) -> int:
+	def updateProductById(self, product: Product) -> int:
 		pass
 
 	def getAllProduct(self, ) -> list:
 		#return List(Product)
 		pass
 
-	def getProductById(self, productId: uuid.UUID) -> Product:
+	def getProductById(self, product: Product) -> Product:
 		#return Product
 		pass
 		
 
-	def checkProductExistByName(self, productName: str) -> uuid.UUID:
+	def checkProductExistByName(self, product: Product) -> uuid.UUID:
 		#return productId
 		pass
 
 
 class DAOSale:
-	"""todo сделать документацию к классу и методам"""
+	"""standart interface for DAOSale object"""
 	
-	def addSaleByProductName(self, productName: str) -> uuid.UUID:
+	def addSaleByProductName(self, product: Product, sale: Sale) -> uuid.UUID:
 		#return saleId
 		pass
 
-	def deleteSaleByProductNameAndSaleId(self, productName: str, saleId: uuid.UUID) -> int:
+	def deleteSaleByProductNameAndSaleId(self, product: Product, sale: Sale) -> int:
 		#return кол-во удаленных кортежей 
 		pass
 
-	def updateSaleByProductNameAndSaleId(self, productName: str, saleId: uuid.UUID) -> int:
+	def updateSaleByProductNameAndSaleId(self, product: Product, sale: Sale) -> int:
 		#return 
 		pass
 
-	def getAllSale(self, productName: str) -> list:
+	def getAllSale(self, product: Product) -> list:
 		#return List(Sale)
 		pass
 
-	def getSaleByProductNameAndSaleId(self, productName: str, saleId: uuid.UUID) -> Sale:
+	def getSaleByProductNameAndSaleId(self, product: Product, sale: Sale) -> Sale:
 		#return Sale
 		pass
 
-	def checkSaleExistByProductNameAndDate(self, productName: str, saleDate: uuid.UUID) -> uuid.UUID:
+	def checkSaleExistByProductNameAndDate(self, product: Product, sale: Sale) -> uuid.UUID:
 		#return saleId
 		pass

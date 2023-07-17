@@ -23,7 +23,7 @@ class Product(Base):
 	#sales: Mapped[list["Sale"]] = relationship(back_populates="Product")
 
 	def __repr__(self) -> str:
-		return f"Product(id={self.id!r}, name={self.name!r}"
+		return f"Product(id={self.id!r}, product_name={self.product_name!r})"
 
 class Sale(Base):
 		__tablename__ = "sale"

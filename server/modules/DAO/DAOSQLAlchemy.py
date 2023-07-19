@@ -8,7 +8,7 @@ from server.modules.adviserModel.product import Product
 from server.modules.adviserModel.sale import Sale
 from server.modules.DAO.DAOInterface import DAOProduct, DAOSale
 import server.modules.DAO.ormmodel.ORMmodel as orm
-from server.modules.DAO.mapper.mapperProduct import MapperProduct
+from server.modules.DAO.mapper.mapperSQLAlchemy import MapperSQLAlchemy
 
 
 class DAOProduct(DAOProduct): # todo доделать реализации методов с алчеми
@@ -18,8 +18,8 @@ class DAOProduct(DAOProduct): # todo доделать реализации ме�
 		
 
 	def addProduct(self, product: Product) -> uuid.UUID:
-		mapper = MapperProduct(product)
-		mappedProduct = mapper.toSQLAlchemy()
+		mapper = MapperSQLAlchemy()
+		mappedProduct = mapper.mapProductToAlchemy(product)
 		with Session(self.engine) as session:
 			session.add(mappedProduct)
 			result = session.scalar(sa.select(orm.Product).where(orm.Product.id == mappedProduct.id))
@@ -28,26 +28,40 @@ class DAOProduct(DAOProduct): # todo доделать реализации ме�
 		#return productId
 
 	def deleteProductById(self, product: Product) -> int:
+		mapper = MapperSQLAlchemy()
+		mappedProduct = mapper.mapProductToAlchemy(product)
 		with Session(self.engine) as session:
-			result = session.scalars(delete(Product).where(Product.id.in_(productId))) #todo протестировать все методы
+			session.scalar(sa.delete(orm.Product).where(orm.Product.id == mappedProduct.id).returning(orm.Product))
 			session.commit()
-			return len(result)
+			return 1
 		#return кол-во удаленных кортежей 
 
 	def updateProductById(self, product: Product) -> int:
+		mapper = MapperSQLAlchemy()
+		mappedProduct = mapper.mapProductToAlchemy(product)
 		with Session(self.engine) as session:
-			result = session.scalars(update(Product).where(Product.id.in_(productId)).values(product_name = "")) #todo доделать строку и спросить что лучше передавать продуктайди или сам продукт 
+			result = session.scalar(sa.update(orm.Product).where(orm.Product.id == mappedProduct.id).values(product_name = orm.Product.product_name).returning(orm.Product))  
 			session.commit()
+			return 1
 
 	def getAllProduct(self, ) -> list:
-		#return List(Product)
-		pass
+		mapper = MapperSQLAlchemy()
+		with Session(self.engine) as session:
+			result = session.scalars(sa.select(orm.Product)).all()
+			listOfProduct = list()
+			for i in result:
+				mappedProduct = mapper.mapProductFromSQLAlchemy(i)
+				listOfProduct.append(mappedProduct)
+			return listOfProduct
 
 	def getProductById(self, product: Product) -> Product:
+		mapper = MapperSQLAlchemy()
+		mappedProduct = mapper.mapProductToAlchemy(product)
 		with Session(self.engine) as session:
-			product = session.scalars(select(Product).where(Product.id == productId)) #todo сделать селект продукта из бд 
+			result = session.scalar(sa.select(orm.Product).where(orm.Product.id == mappedProduct.id))
 			session.commit()
-			return Product
+			mappedFromAlchemy = mapper.mapProductFromSQLAlchemy(result)
+			return mappedFromAlchemy
 		
 
 	def checkProductExistByName(self, product: Product) -> uuid.UUID:

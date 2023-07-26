@@ -23,6 +23,7 @@ def upgrade() -> None:
         sa.Column("product_name", sa.String, nullable=False),
 
         sa.PrimaryKeyConstraint("id", name = "product_pk"),
+        sa.UniqueConstraint("product_name",  name = "product_product_name_unique")
     )
     
 

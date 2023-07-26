@@ -62,7 +62,7 @@ class TestDAOSQLAlchemyProduct:
 			DAOProduct = al.DAOProduct(engine)
 			newProduct = Product(product_id = (testId), name = "firstProduct")
 			result = DAOProduct.addProduct(newProduct)
-			assert str(result) ==  "06335e84-2872-4914-8c5d-3ed07d2a2f16"
+			assert str(result.product_id) ==  "06335e84-2872-4914-8c5d-3ed07d2a2f16"
 
 		finally:
 			database.removeDatabase()
@@ -94,6 +94,24 @@ class TestDAOSQLAlchemyProduct:
 		finally:
 			database.removeDatabase()
 
+	def test_deleteProduct(self,):
+		database = TemporaryFile()
+		database.crateDatabase()
+		try:
+			engine = database.createEngine()
+			orm.Base.metadata.create_all(engine)
+			testId = uuid.UUID("06335e84-2872-4914-8c5d-3ed07d2a2f16")
+			DAOProduct = al.DAOProduct(engine)
+			newProduct = Product(product_id = (testId), name = "firstProduct")
+			DAOProduct.addProduct(newProduct)
+			result = DAOProduct.deleteProduct(newProduct)
+			result2 = DAOProduct.getProductById(testId)
+			assert result ==  1
+			assert result2 == None
+
+		finally:
+			database.removeDatabase()
+
 	def test_deleteProductById(self,):
 		database = TemporaryFile()
 		database.crateDatabase()
@@ -104,13 +122,15 @@ class TestDAOSQLAlchemyProduct:
 			DAOProduct = al.DAOProduct(engine)
 			newProduct = Product(product_id = (testId), name = "firstProduct")
 			DAOProduct.addProduct(newProduct)
-			result = DAOProduct.deleteProductById(newProduct)
+			result = DAOProduct.deleteProductById(testId)
+			result2 = DAOProduct.getProductById(testId)
 			assert result ==  1
+			assert result2 == None
 
 		finally:
 			database.removeDatabase()
 
-	def test_updateProductById(self,):
+	def test_updateProduct(self,):
 		database = TemporaryFile()
 		database.crateDatabase()
 		try:
@@ -120,8 +140,11 @@ class TestDAOSQLAlchemyProduct:
 			DAOProduct = al.DAOProduct(engine)
 			newProduct = Product(product_id = (testId), name = "firstProduct")
 			DAOProduct.addProduct(newProduct)
-			result = DAOProduct.updateProductById(newProduct)
+			rebuildingProduct = Product(product_id = (testId), name = "secondProduct")
+			result = DAOProduct.updateProduct(rebuildingProduct)
+			result2 = DAOProduct.getProductById(testId)
 			assert result ==  1
+			assert result2.name == "secondProduct"
 		finally:
 			database.removeDatabase()
 
@@ -155,7 +178,7 @@ class TestDAOSQLAlchemyProduct:
 			DAOProduct = al.DAOProduct(engine)
 			newProduct = Product(product_id = (testId), name = "firstProduct")
 			DAOProduct.addProduct(newProduct)
-			result = DAOProduct.getProductById(newProduct)
+			result = DAOProduct.getProductById(testId)
 			assert result.product_id == testId
 		finally:
 			database.removeDatabase()
@@ -169,10 +192,110 @@ class TestDAOSQLAlchemySale:
 			engine = database.createEngine()
 			orm.Base.metadata.create_all(engine)
 
-			DAOProduct = al.DAOSale(engine)
-			assert type(DAOProduct) == al.DAOSale
+			DAOSale = al.DAOSale(engine)
+			assert type(DAOSale) == al.DAOSale
 		finally:
 			database.removeDatabase()
+
+	def test_addSale(self,):#todo передаль плд сэйл
+		database = TemporaryFile()
+		database.crateDatabase()
+		try:
+			engine = database.createEngine()
+			orm.Base.metadata.create_all(engine)
+			testId = uuid.UUID("06335e84-2872-4914-8c5d-3ed07d2a2f16")
+			testId2 = uuid.UUID("06335e84-2872-4914-8c5d-3ed07d2a2f15")
+			DAOSale = al.DAOSale(engine)
+			newSale = Sale(sale_id = testId, product_id = testId2, quantity = 1, total_value = 2, date = datetime.today())
+			result = DAOSale.addSale(newSale)
+			assert str(result.sale_id) ==  "06335e84-2872-4914-8c5d-3ed07d2a2f16"
+		finally:
+			database.removeDatabase()
+
+	def test_deleteSale(self,):
+		database = TemporaryFile()
+		database.crateDatabase()
+		try:
+			engine = database.createEngine()
+			orm.Base.metadata.create_all(engine)
+			testId = uuid.UUID("06335e84-2872-4914-8c5d-3ed07d2a2f16")
+			testId2 = uuid.UUID("06335e84-2872-4914-8c5d-3ed07d2a2f15")
+			DAOSale = al.DAOSale(engine)
+			newSale = Sale(sale_id = testId, product_id = testId2, quantity = 1, total_value = 2, date = datetime.today())
+			DAOSale.addSale(newSale)
+			result = DAOSale.deleteSale(newSale)
+			result2 = DAOSale.getSaleBySaleId(testId)
+			assert result ==  1
+			assert result2 == None
+		finally:
+			database.removeDatabase()
+
+	def test_updateSale(self,):
+		database = TemporaryFile()
+		database.crateDatabase()
+		try:
+			engine = database.createEngine()
+			orm.Base.metadata.create_all(engine)
+			testId = uuid.UUID("06335e84-2872-4914-8c5d-3ed07d2a2f16")
+			testId2 = uuid.UUID("06335e84-2872-4914-8c5d-3ed07d2a2f15")
+			DAOSale = al.DAOSale(engine)
+			newSale = Sale(sale_id = testId, product_id = testId2, quantity = 1, total_value = 2, date = datetime.today())
+			DAOSale.addSale(newSale)
+			rebuildingSale = Sale(sale_id = testId, product_id = testId2, quantity = 2, total_value = 3, date = datetime.today())
+			result = DAOSale.updateSale(rebuildingSale)
+			result2 = DAOSale.getSaleBySaleId(testId)
+			assert result ==  1
+			assert result2.quantity == 2
+			assert result2.total_value == 3
+		finally:
+			database.removeDatabase()
+
+	def test_getAllSale(self,):
+		database = TemporaryFile()
+		database.crateDatabase()
+		try:
+			engine = database.createEngine()
+			orm.Base.metadata.create_all(engine)
+			testId = uuid.UUID("06335e84-2872-4914-8c5d-3ed07d2a2f16")
+			testId2 = uuid.UUID("06335e84-2872-4914-8c5d-3ed07d2a2f15")
+			testId3 = uuid.UUID("06335e84-2872-4914-8c5d-3ed07d2a2f14")
+			DAOSale = al.DAOSale(engine)
+			newSale = Sale(sale_id = testId, product_id = testId2, quantity = 1, total_value = 2, date = datetime.today())
+			newSale2 = Sale(sale_id = testId3, product_id = testId2, quantity = 1, total_value = 2, date = datetime.today())
+			DAOSale.addSale(newSale)
+			DAOSale.addSale(newSale2)
+			result = DAOSale.getAllSale()
+			assert result[0].sale_id == testId
+			assert result[1].sale_id == testId3
+		finally:
+			database.removeDatabase()
+
+	def test_getAllSaleByProductId(self,):
+		database = TemporaryFile()
+		database.crateDatabase()
+		try:
+			engine = database.createEngine()
+			orm.Base.metadata.create_all(engine)
+			testId = uuid.UUID("06335e84-2872-4914-8c5d-3ed07d2a2f16")
+			testId2 = uuid.UUID("06335e84-2872-4914-8c5d-3ed07d2a2f15")
+			testId3 = uuid.UUID("06335e84-2872-4914-8c5d-3ed07d2a2f14")
+			testId4 = uuid.UUID("06335e84-2872-4914-8c5d-3ed07d2a2f13")
+			testId5 = uuid.UUID("06335e84-2872-4914-8c5d-3ed07d2a2f12")
+			DAOSale = al.DAOSale(engine)
+			newSale = Sale(sale_id = testId, product_id = testId2, quantity = 1, total_value = 2, date = datetime.today())
+			newSale2 = Sale(sale_id = testId3, product_id = testId2, quantity = 1, total_value = 2, date = datetime.today())
+			newSale3 = Sale(sale_id = testId4, product_id = testId5, quantity = 1, total_value = 2, date = datetime.today())
+			DAOSale.addSale(newSale)
+			DAOSale.addSale(newSale2)
+			DAOSale.addSale(newSale3)
+			result = DAOSale.getAllSaleByProductId(testId2)
+			assert result[0].sale_id == testId
+			assert result[1].sale_id == testId3
+			with pytest.raises(IndexError):
+				p = result[2]
+		finally:
+			database.removeDatabase() 
+
 
 
 

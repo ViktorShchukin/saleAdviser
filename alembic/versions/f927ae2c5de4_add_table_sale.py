@@ -26,8 +26,8 @@ def upgrade() -> None:
         sa.Column("date", sa.DateTime, nullable=False),
 
         sa.PrimaryKeyConstraint("id", name = "sale_pk"),
-        sa.ForeignKeyConstraint(["product_id"],["product.id"], name = "realization_product_fk"),
-        sa.UniqueConstraint("product_id", "date", name = "sale_product_id_sale_month_unique"),
+        sa.ForeignKeyConstraint(["product_id"],["product.id"], name = "sale_product_fk"),
+        sa.UniqueConstraint("product_id", "date", name = "sale_product_id_date_unique"),
     )
 
 

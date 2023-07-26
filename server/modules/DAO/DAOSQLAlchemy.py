@@ -17,17 +17,18 @@ class DAOProduct(DAOProduct): # todo доделать реализации ме�
 		self.engine = engine
 		
 
-	def addProduct(self, product: Product) -> uuid.UUID:
+	def addProduct(self, product: Product) -> Product:
 		mapper = MapperSQLAlchemy()
 		mappedProduct = mapper.mapProductToAlchemy(product)
 		with Session(self.engine) as session:
 			session.add(mappedProduct)
 			result = session.scalar(sa.select(orm.Product).where(orm.Product.id == mappedProduct.id))
 			session.commit()
-			return result.id
+			mappedFromAlchemy = mapper.mapProductFromSQLAlchemy(result)
+			return mappedFromAlchemy
 		#return productId
 
-	def deleteProductById(self, product: Product) -> int:
+	def deleteProduct(self, product: Product) -> int:
 		mapper = MapperSQLAlchemy()
 		mappedProduct = mapper.mapProductToAlchemy(product)
 		with Session(self.engine) as session:
@@ -36,11 +37,18 @@ class DAOProduct(DAOProduct): # todo доделать реализации ме�
 			return 1
 		#return кол-во удаленных кортежей 
 
-	def updateProductById(self, product: Product) -> int:
+	def deleteProductById(self, product_id: uuid.UUID) -> int:
+		mapper = MapperSQLAlchemy()
+		with Session(self.engine) as session:
+			session.scalar(sa.delete(orm.Product).where(orm.Product.id == product_id).returning(orm.Product))
+			session.commit()
+			return 1
+
+	def updateProduct(self, product: Product) -> int:
 		mapper = MapperSQLAlchemy()
 		mappedProduct = mapper.mapProductToAlchemy(product)
 		with Session(self.engine) as session:
-			result = session.scalar(sa.update(orm.Product).where(orm.Product.id == mappedProduct.id).values(product_name = orm.Product.product_name).returning(orm.Product))  
+			result = session.scalar(sa.update(orm.Product).where(orm.Product.id == mappedProduct.id).values(product_name = mappedProduct.product_name).returning(orm.Product))  
 			session.commit()
 			return 1
 
@@ -54,11 +62,10 @@ class DAOProduct(DAOProduct): # todo доделать реализации ме�
 				listOfProduct.append(mappedProduct)
 			return listOfProduct
 
-	def getProductById(self, product: Product) -> Product:
+	def getProductById(self, product_id: uuid.UUID) -> Product:
 		mapper = MapperSQLAlchemy()
-		mappedProduct = mapper.mapProductToAlchemy(product)
 		with Session(self.engine) as session:
-			result = session.scalar(sa.select(orm.Product).where(orm.Product.id == mappedProduct.id))
+			result = session.scalar(sa.select(orm.Product).where(orm.Product.id == product_id))
 			session.commit()
 			mappedFromAlchemy = mapper.mapProductFromSQLAlchemy(result)
 			return mappedFromAlchemy
@@ -74,28 +81,73 @@ class DAOSale(DAOSale): # todo доделать реализации метод�
 	def __init__(self, engine):
 		self.engine = engine
 
-	def addSaleByProductName(self, productName: str) -> uuid.UUID:
-		#return saleId
-		pass
-
-	def deleteSaleByProductNameAndSaleId(self, productName: str, saleId: uuid.UUID) -> int:
-		#return кол-во удаленных кортежей 
-		pass
-
-	def updateSaleByProductNameAndSaleId(self, productName: str, saleId: uuid.UUID) -> int:
-		#return 
-		pass
-
-	def getAllSale(self, productName: str) -> list:
-		#return List(Sale)
-		pass
-
-	def getSaleByProductNameAndSaleId(self, productName: str, saleId: uuid.UUID) -> Sale:
+	def addSale(self, sale: Sale) -> Sale:
+		mapper = MapperSQLAlchemy()
+		mappedSale = mapper.mapSaleToAlchemy(sale)
 		with Session(self.engine) as session:
-			#sale = session.select #todo сделать селект продукта из бд 
-			#session.commit()
-			return Sale
+			session.add(mappedSale)
+			result = session.scalar(sa.select(orm.Sale).where(orm.Sale.id == mappedSale.id))
+			session.commit()
+			mappedFromAlchemy = mapper.mapSaleFromSQLAlchemy(result)
+			return mappedFromAlchemy
 		
+
+	def deleteSale(self, sale: Sale) -> int:
+		mapper = MapperSQLAlchemy()
+		mappedSale = mapper.mapSaleToAlchemy(sale)
+		with Session(self.engine) as session:
+			session.scalar(sa.delete(orm.Sale).where(orm.Sale.id == mappedSale.id).returning(orm.Sale))
+			session.commit()
+			return 1
+
+	def deleteSaleById(self, sale_id: uuid.UUID) -> int:
+		mapper = MapperSQLAlchemy()
+		with Session(self.engine) as session:
+			session.scalar(sa.delete(orm.Sale).where(orm.Sale.id == sale_id).returning(orm.Sale))
+			session.commit()
+			return 1
+
+	def updateSale(self, sale: Sale) -> int:
+		mapper = MapperSQLAlchemy()
+		mappedSale = mapper.mapSaleToAlchemy(sale)
+		with Session(self.engine) as session:
+			session.scalar(sa.update(orm.Sale).where(orm.Sale.id == mappedSale.id).values(product_id = mappedSale.product_id,
+																							quantity = mappedSale.quantity,
+																							total_value = mappedSale.total_value,
+																							date = mappedSale.date).returning(orm.Sale))
+			session.commit()
+			return 1
+
+	def getAllSale(self, ) -> list:
+		mapper = MapperSQLAlchemy()
+		with Session(self.engine) as session:
+			result = session.scalars(sa.select(orm.Sale)).all()
+			session.commit()
+			listOfSale = list()
+			for i in result:
+				mappedSale = mapper.mapSaleFromSQLAlchemy(i)
+				listOfSale.append(mappedSale)
+			return listOfSale
+
+	def getAllSaleByProductId(self, product_id: uuid.UUID) -> list:
+		mapper = MapperSQLAlchemy()
+		with Session(self.engine) as session:
+			result = session.scalars(sa.select(orm.Sale).where(orm.Sale.product_id == product_id)).all()
+			session.commit()
+			listOfSale = list()
+			for i in result:
+				mappedSale = mapper.mapSaleFromSQLAlchemy(i)
+				listOfSale.append(mappedSale)
+			return listOfSale
+		
+	def getSaleBySaleId(self, sale_id: uuid.UUID) -> Sale:
+		mapper = MapperSQLAlchemy()
+		with Session(self.engine) as session:
+			result = session.scalar(sa.select(orm.Sale).where(orm.Sale.id == sale_id))
+			session.commit()
+			mappedSale = mapper.mapSaleFromSQLAlchemy(result)
+			return mappedSale
+
 
 	def checkSaleExistByProductNameAndDate(self, productName: str, saleDate: uuid.UUID) -> uuid.UUID:
 		#return saleId

@@ -17,12 +17,14 @@ class DAOFactory:
 		
 
 	def getDAOProduct(self,) -> interface.DAOProduct:
+		self.initConection()
 		if self.config.getParam("databaseName") == "SQLite3":
 			return DAOProduct(self.engine)
 		else:
 			raise RuntimeError("неизвастная база данных ") 
 
 	def getDAOSale(self,) -> interface.DAOSale:
+		self.initConection()
 		if self.config.getParam("databaseName") == "SQLite3":
 			return DAOSale(self.engine)
 		else:

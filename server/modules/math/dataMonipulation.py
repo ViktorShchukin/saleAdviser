@@ -51,7 +51,7 @@ class TableFunction :
 		derivative = (func1 - func0) / (arg1.deltaMonth(arg0))
 		return derivative #todo доделать 
 
-class Argument :
+class Argument:
 	def __init__(self, year: int, month: int):
 		self.year = year
 		self.month = month

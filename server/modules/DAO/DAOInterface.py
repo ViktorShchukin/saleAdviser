@@ -10,27 +10,27 @@ from server.modules.adviserModel.sale import Sale
 class DAOProduct:
 	"""standart interface for DAOProduct object"""
 
-	def addProduct(self, product: Product) -> uuid.UUID:#todo return new product object
+	def addProduct(self, product: Product) -> Product:#todo return new product object
 		#return productId
 		pass
 
-	def deleteProductById(self, product: Product) -> int:
+	def deleteProduct(self, product: Product) -> int:
 		#return кол-во удаленных кортежей 
 		pass
 
-	def updateProductById(self, product: Product) -> int:
+	def updateProduct(self, product: Product) -> int:
 		pass
 
 	def getAllProduct(self, ) -> list:
 		#return List(Product)
 		pass
 
-	def getProductById(self, product: Product) -> Product:
+	def getProductById(self, product_id: uuid.UUID) -> Product:
 		#return Product
 		pass
 		
 
-	def checkProductExistByName(self, product: Product) -> uuid.UUID:
+	def checkProductExistByName(self, productName: str) -> bool:
 		#return productId
 		pass
 
@@ -38,23 +38,23 @@ class DAOProduct:
 class DAOSale:
 	"""standart interface for DAOSale object"""
 	
-	def addSaleByProductName(self, product: Product, sale: Sale) -> uuid.UUID:
+	def addSale(self, sale: Sale) -> uuid.UUID:
 		#return saleId
 		pass
 
-	def deleteSaleByProductNameAndSaleId(self, product: Product, sale: Sale) -> int:
+	def deleteSale(self, sale: Sale) -> int:
 		#return кол-во удаленных кортежей 
 		pass
 
-	def updateSaleByProductNameAndSaleId(self, product: Product, sale: Sale) -> int:
+	def updateSale(self, sale: Sale) -> int:
 		#return 
 		pass
 
-	def getAllSale(self, product: Product) -> list:
+	def getAllSale(self,) -> list:
 		#return List(Sale)
 		pass
 
-	def getSaleByProductNameAndSaleId(self, product: Product, sale: Sale) -> Sale:
+	def getAllSaleByProductId(self, product_id: uuid.UUID) -> list:
 		#return Sale
 		pass
 

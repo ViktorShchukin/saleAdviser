@@ -100,6 +100,13 @@ class DAOSale(DAOSale): # todo доделать реализации метод�
 			session.commit()
 			return 1
 
+	def deleteSaleById(self, sale_id: uuid.UUID) -> int:
+		mapper = MapperSQLAlchemy()
+		with Session(self.engine) as session:
+			session.scalar(sa.delete(orm.Sale).where(orm.Sale.id == sale_id).returning(orm.Sale))
+			session.commit()
+			return 1
+
 	def updateSale(self, sale: Sale) -> int:
 		mapper = MapperSQLAlchemy()
 		mappedSale = mapper.mapSaleToAlchemy(sale)

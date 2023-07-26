@@ -13,4 +13,4 @@ class Sale:
 
 	def toJSON(self) -> dict:
 		return {'sale_id':self.sale_id, 'product_id':self.product_id, 'quantity':self.quantity,
-				 'total_value':self.total_value, 'date':self.saleMonth}
+				 'total_value':self.total_value, 'date':self.date}

@@ -1,5 +1,6 @@
 #
 import uuid
+from datetime import datetime
 
 from flask import Flask
 from flask import jsonify
@@ -40,7 +41,7 @@ def createNewProduct():
     newProduct = Product(product_id = uuid.uuid4(), name = row['name'])
     product = dao.addProduct(newProduct)
     if product == None:
-        return "", 404 #стоит ли возвращать код 500?
+        return "", 404 #find more fit http code 
     else:
         return dumps(product.toJSON())
 
@@ -71,8 +72,8 @@ def deleteProduct(productId):
 
 @app.route('/dictionary/product/<productId>/sale',  methods=['GET'])
 def getAllSales(productId):
-    dao = realizationDAO.DAO('moms1.db')
-    sales = dao.getAllSalesByProductId(productId)
+    dao = DAOFactory.getDAOSale()
+    sales = dao.getAllSaleByProductId(uuid.UUID(productId))
     if sales == None:
         return "", 404
     else:
@@ -81,10 +82,12 @@ def getAllSales(productId):
 @app.route('/dictionary/product/<productId>/sale',  methods=['POST'])
 def createNewSale(productId):
     row = loads(request.data)
-    dao = realizationDAO.DAO('moms1.db')
-    newSaleId = dao.saveToDb(row['productId'], row['quantity'], row['total'], row['saleMonth'])
-    dao.commit()
-    sale = dao.getSaleById(productId, newSaleId)
+    dao = DAOFactory.getDAOSale()
+    date = datetime.fromisoformat(row['saleMonth'])
+    newSale = Sale(sale_id = uuid.uuid4(), product_id = uuid.UUID(productId), quantity = row['quantity'],
+                    total_value = row['total'], date = date)
+    dao.addSale(newSale)
+    sale = dao.getSaleBySaleId(newSale.sale_id)
     if sale == None:
         return "", 404
     else:
@@ -94,28 +97,27 @@ def createNewSale(productId):
 @app.route('/dictionary/product/<productId>/sale/<saleId>',  methods=['PUT'])
 def updateSale(productId, saleId):#переделать порядок передачи переменных todo
     row = loads(request.data)
-    dao = realizationDAO.DAO('moms1.db')
-    sale = dao.getSaleById(productId, saleId)
+    dao = DAOFactory.getDAOSale()
+    sale = dao.getSaleBySaleId(uuid.UUID(saleId))
+    #ISOdate = datetime.strptime(row['saleMonth'], '%d.%m.%Y')
+    date = datetime.fromisoformat(row['saleMonth'])
     if sale == None:
         return "", 404
-    sale.productId = row['productId'] 
-    sale.quantity = row['quantity']
-    sale.total = row['total']
-    sale.saleMonth = row['saleMonth']
-    dao.updateSale(sale)
-    sale = dao.getSaleById(sale.productId, saleId)
-    dao.commit()
-    if sale == None:
+    rebuildingSale = Sale(sale_id = uuid.UUID(saleId), product_id = uuid.UUID(productId), quantity = row['quantity'],
+                            total_value = row['total'], date = date)
+    dao.updateSale(rebuildingSale)
+    sale1 = dao.getSaleBySaleId(rebuildingSale.sale_id)
+    if sale1 == None:
         return "", 404
     else:
         return dumps(sale.toJSON())
 
 @app.route('/dictionary/product/<productId>/sale/<saleId>',  methods=['DELETE'])
 def deleteSale(productId, saleId):
-    dao = realizationDAO.DAO('moms1.db')
-    res = dao.deleteSale(productId, saleId)
-    dao.commit()
-    if res == 0:
+    dao = DAOFactory.getDAOSale()
+    sale1 = dao.getSaleBySaleId(uuid.UUID(saleId))
+    if sale1 == None:
         return "", 404
-    else:
-        return "", 201
+    res = dao.deleteSaleById(uuid.UUID(saleId))
+    if res == 1:
+        return "", 201# find more fit http code 

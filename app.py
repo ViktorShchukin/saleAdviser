@@ -1,23 +1,33 @@
 #
+import uuid
+
 from flask import Flask
 from flask import jsonify
 from flask.json import dumps, loads
 from flask import request
-import modules.DAO.realizationDAO as realizationDAO
+
+from server.config.Config import Config
+from server.modules.DAO.DAOFactory import DAOFactory
+from server.modules.adviserModel.product import Product
+from server.modules.adviserModel.sale import Sale
+
+config = Config()
+DAOFactory = DAOFactory(config)
+
 
 
 app = Flask(__name__)
 
 @app.route('/dictionary/product',  methods=['GET'])
 def getProductAll():
-    dao = realizationDAO.DAO('moms1.db')
-    res = dao.getProductAll()
+    dao = DAOFactory.getDAOProduct()
+    res = dao.getAllProduct()
     return dumps([e.toJSON() for e in res])
 
 @app.route('/dictionary/product/<productId>',  methods=['GET'])
 def getProductById(productId):
-    dao = realizationDAO.DAO('moms1.db')
-    product = dao.getProductById(productId)
+    dao = DAOFactory.getDAOProduct()
+    product = dao.getProductById(uuid.UUID(productId))
     if product == None:
         return "", 404
     else:
@@ -26,10 +36,9 @@ def getProductById(productId):
 @app.route('/dictionary/product/',  methods=['POST'])
 def createNewProduct():
     row = loads(request.data)
-    dao = realizationDAO.DAO('moms1.db')
-    newProductId = dao.saveProductToDb(row['name'])
-    dao.commit()
-    product = dao.getProductById(newProductId)
+    dao = DAOFactory.getDAOProduct()
+    newProduct = Product(product_id = uuid.uuid4(), name = row['name'])
+    product = dao.addProduct(newProduct)
     if product == None:
         return "", 404 #стоит ли возвращать код 500?
     else:
@@ -38,27 +47,26 @@ def createNewProduct():
 @app.route('/dictionary/product/<productId>',  methods=['PUT'])
 def updateProduct(productId):
     row = loads(request.data)
-    dao = realizationDAO.DAO('moms1.db')
-    product = dao.getProductById(productId)
+    dao = DAOFactory.getDAOProduct()
+    product = dao.getProductById(uuid.UUID(productId))
     if product == None:
         return "", 404
-    product.name = row['name'] 
-    dao.updateProduct(product)
-    product = dao.getProductById(product.productId)
-    dao.commit()
-    if product == None:
+    rebuildingProduct = Product(product_id = uuid.UUID(productId), name =row['name'])
+    dao.updateProduct(rebuildingProduct)
+    product1 = dao.getProductById(uuid.UUID(productId))
+    if product1 == None:
         return "", 404
     else:
-        return dumps(product.toJSON())
+        return dumps(product1.toJSON())
 
 @app.route('/dictionary/product/<productId>',  methods=['DELETE'])
 def deleteProduct(productId):
-    dao = realizationDAO.DAO('moms1.db')
-    res = dao.deleteProduct(productId)
-    dao.commit()
-    if res == 0:
+    dao =  DAOFactory.getDAOProduct()
+    res1 = dao.getProductById(uuid.UUID(productId))
+    if res1 == None:
         return "", 404
-    else:
+    res = dao.deleteProductById(uuid.UUID(productId))
+    if res == 1:
         return "", 201
 
 @app.route('/dictionary/product/<productId>/sale',  methods=['GET'])

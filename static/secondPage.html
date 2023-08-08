@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8"/>
+	<meta name="viewport" content="width=device-width, initial-scale=1"/>
+	<title>script js</title>
+	<script src="/static/script.js"></script>
+	<link rel="stylesheet" href="/static/styles.css"> <!-- why it doesn't work -->
+	
+</head>
+<body>
+	<h1 style="text-align:center;">Page with some JS code</h1>
+	<p id="demo" onclick="getAllProduct2()">This can be replaced. Just click on button below</p>
+	<button type="button" onclick="myFunction()">Try it</button>
+	<button type="button" onclick="getAllProduct()">Try it, Product</button>
+	<p id='responseAsJson'>Something</p>
+	<p id='test'>list of product</p>
+	<script type="text/javascript">
+		
+	let url = 'http://127.0.0.1:5000/dictionary/product';
+	fetch(url)
+		.then((response) => response.json())
+		.then((data) => {
+			console.log("JSON: " + JSON.stringify(data))
+			document.getElementById("responseAsJson").innerHTML = JSON.stringify(data);			
+		});
+
+	</script>
+</body>
+</html>

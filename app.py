@@ -6,6 +6,8 @@ from flask import Flask
 from flask import jsonify
 from flask.json import dumps, loads
 from flask import request
+from flask import render_template
+from flask import url_for
 
 from server.config.Config import Config
 from server.modules.DAO.DAOFactory import DAOFactory
@@ -18,6 +20,17 @@ DAOFactory = DAOFactory(config)
 
 
 app = Flask(__name__)
+
+@app.route('/', methods=['GET'])
+def getIndex():
+    return url_for('static', filename='index.html')
+    #return render_template("index.html")
+
+"""
+@app.route('/secondPage', methods=['GET'])
+def getSecondPage():
+    return render_template("secondPage.html")
+"""
 
 @app.route('/dictionary/product',  methods=['GET'])
 def getProductAll():
@@ -79,19 +92,23 @@ def getAllSales(productId):
     else:
         return dumps([e.toJSON() for e in sales])
 
-@app.route('/dictionary/product/<productId>/sale',  methods=['POST'])
-def createNewSale(productId):
-    row = loads(request.data)
+@app.route('/dictionary/product/<productId>/sale',  methods=['GET'])
+def getSalesById(productId):
     dao = DAOFactory.getDAOSale()
-    date = datetime.fromisoformat(row['saleMonth'])
-    newSale = Sale(sale_id = uuid.uuid4(), product_id = uuid.UUID(productId), quantity = row['quantity'],
-                    total_value = row['total'], date = date)
-    dao.addSale(newSale)
-    sale = dao.getSaleBySaleId(newSale.sale_id)
-    if sale == None:
+    sale = dao.getAllSaleByProductId(uuid.UUID(productId))
+    if sales == None:
         return "", 404
     else:
         return dumps(sale.toJSON())
+
+@app.route('/dictionary/product/<productId>/sale/<saleId>',  methods=['GET'])
+def createNewSale(productId, saleId):
+    dao = DAOFactory.getDAOSale()
+    sales = dao.getSaleBySaleId(uuid.UUID(saleId))
+    if sales == None:
+        return "", 404
+    else:
+        return dumps([e.toJSON() for e in sales])
     
   
 @app.route('/dictionary/product/<productId>/sale/<saleId>',  methods=['PUT'])

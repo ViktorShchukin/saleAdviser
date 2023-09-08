@@ -3,10 +3,10 @@ import uuid
 from datetime import datetime
 
 from flask import Flask
-from flask import jsonify
+#from flask import jsonify
 from flask.json import dumps, loads
 from flask import request
-from flask import render_template
+#from flask import render_template
 from flask import url_for
 
 from server.config.Config import Config
@@ -26,17 +26,18 @@ def getIndex():
     return url_for('static', filename='index.html')
     #return render_template("index.html")
 
-"""
-@app.route('/secondPage', methods=['GET'])
-def getSecondPage():
-    return render_template("secondPage.html")
-"""
 
 @app.route('/dictionary/product',  methods=['GET'])
 def getProductAll():
+    searcProduct = request.args.get("product_name")
     dao = DAOFactory.getDAOProduct()
-    res = dao.getAllProduct()
-    return dumps([e.toJSON() for e in res])
+    if searcProduct == '':
+        res = dao.getAllProduct()
+        return dumps([e.toJSON() for e in res])
+    else:
+        res = dao.getProductByNameLike(searcProduct)
+        return dumps([e.toJSON() for e in res])
+
 
 @app.route('/dictionary/product/<productId>',  methods=['GET'])
 def getProductById(productId):
@@ -96,7 +97,7 @@ def getAllSales(productId):
 def getSalesById(productId):
     dao = DAOFactory.getDAOSale()
     sale = dao.getAllSaleByProductId(uuid.UUID(productId))
-    if sales == None:
+    if sale == None:
         return "", 404
     else:
         return dumps(sale.toJSON())
@@ -112,7 +113,7 @@ def createNewSale(productId, saleId):
     
   
 @app.route('/dictionary/product/<productId>/sale/<saleId>',  methods=['PUT'])
-def updateSale(productId, saleId):#переделать порядок передачи переменных todo
+def updateSale(productId, saleId): #переделать порядок передачи переменных todo
     row = loads(request.data)
     dao = DAOFactory.getDAOSale()
     sale = dao.getSaleBySaleId(uuid.UUID(saleId))

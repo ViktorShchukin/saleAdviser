@@ -6,11 +6,10 @@ from server.modules.adviserModel.product import Product
 from server.modules.adviserModel.sale import Sale
 
 
-
 class DAOProduct:
-	"""standart interface for DAOProduct object"""
+	"""standard interface for DAOProduct object"""
 
-	def addProduct(self, product: Product) -> Product:#todo return new product object
+	def addProduct(self, product: Product) -> Product:  #todo return new product object
 		#return productId
 		pass
 
@@ -34,9 +33,12 @@ class DAOProduct:
 		#return productId
 		pass
 
+	def getProductByNameLike(self, searcProduct):
+		pass
+
 
 class DAOSale:
-	"""standart interface for DAOSale object"""
+	"""standard interface for DAOSale object"""
 	
 	def addSale(self, sale: Sale) -> uuid.UUID:
 		#return saleId

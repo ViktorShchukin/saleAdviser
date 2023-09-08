@@ -69,6 +69,27 @@ class DAOProduct(DAOProduct): # todo доделать реализации ме�
 			session.commit()
 			mappedFromAlchemy = mapper.mapProductFromSQLAlchemy(result)
 			return mappedFromAlchemy
+
+	def getProductByName(self, product_name: str) -> Product:
+		mapper = MapperSQLAlchemy()
+		with Session(self.engine) as session:
+			result = session.scalar(sa.select(orm.Product).where(orm.Product.product_name == product_name))
+			
+			mappedFromAlchemy = mapper.mapProductFromSQLAlchemy(result)
+			session.commit()
+			return mappedFromAlchemy
+
+	def getProductByNameLike(self, product_name: str) -> list:
+		mapper = MapperSQLAlchemy()
+		with Session(self.engine) as session:
+			newProductName = "%"+product_name+"%"
+			result = session.query(orm.Product).filter(orm.Product.product_name.like(newProductName)).all()
+			listOfProduct = list()
+			for i in result:
+				mappedProduct = mapper.mapProductFromSQLAlchemy(i)
+				listOfProduct.append(mappedProduct)
+			session.commit()
+			return listOfProduct
 		
 
 	def checkProductExistByName(self, product: Product) -> uuid.UUID:

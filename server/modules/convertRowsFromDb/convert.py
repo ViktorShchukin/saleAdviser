@@ -21,7 +21,7 @@ def saveFileToDb(dao, fileName):
 		columns=convertLine(line)
 		productId = dao.getProductIdOrCreate(columns[1])
 		if columns[2] != '' and columns[1] != '':
-			dao.saveToDb(columns[0], productId, columns[2], columns[3], columns[4] )
+			dao.saveToDb(productId, columns[2], columns[3], columns[4] )
 			#dao.commit()
 		line=file.readline()
 	
@@ -31,6 +31,6 @@ def saveFileToDb(dao, fileName):
 
 
 if __name__ == "__main__":
-	dao = realizationDAO.DAO("moms1.db")
-	saveFileToDb(dao,'dataFile1.csv')
+	dao = realizationDAO.DAO("../saleAdviser/database/main.db")
+	saveFileToDb(dao,'../saleAdviser/dataFile1.csv')
 	dao.commit()

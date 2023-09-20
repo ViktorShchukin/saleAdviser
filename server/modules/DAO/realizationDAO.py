@@ -1,8 +1,8 @@
 #
 import sqlite3
 import uuid
-from modules.adviserModel.product import Product
-from modules.adviserModel.sale import Sale
+from server.modules.adviserModel.product import Product
+from server.modules.adviserModel.sale import Sale
 
 CREATE_REALIZATION_TABLE_QUERY = """
 create table if not exists realization (
@@ -33,13 +33,13 @@ class DAO:
 		self.sql = self.con.cursor()
 
 	def saveProductToDb(self, productName)->str:
-		QUERY = "insert into product (id,name) values (?,?)"
+		QUERY = "insert into product (id,product_name) values (?,?)"
 		productId = str(uuid.uuid4())
 		self.sql.execute(QUERY, (productId, productName))
 		return productId
 
 	def saveToDb (self, productId, quantity, total, saleMonth):
-		QUERY= """insert into realization (id,product_id,quantity,total,sale_month) values (?,?,?,?,?)"""
+		QUERY= """insert into sale (id,product_id,quantity,total_value,date) values (?,?,?,?,?)"""
 		saleId = str(uuid.uuid4())
 		self.sql.execute(QUERY, (saleId, productId, quantity, total, saleMonth))
 		return saleId
@@ -59,7 +59,7 @@ class DAO:
 		return res.rowcount
 
 	def checkProductExist(self, productName)->str:
-		QUERY = "select id from product where name=?"
+		QUERY = "select id from product where product_name=?"
 		res = self.sql.execute(QUERY, (productName,))
 		stringIntoProduct = res.fetchone()
 		if stringIntoProduct == None:

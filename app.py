@@ -6,8 +6,9 @@ from flask import Flask
 # from flask import jsonify
 from flask.json import dumps, loads
 from flask import request
-# from flask import render_template
+from flask import render_template
 from flask import url_for
+from flask import redirect
 
 from server.config.Config import Config
 from server.modules.DAO.DAOFactory import DAOFactory
@@ -22,19 +23,21 @@ app = Flask(__name__)
 
 @app.route('/', methods=['GET'])
 def getIndex():
-    return url_for('static', filename='index.html')
-    # return render_template("index.html")
+    # return redirect(url_for('static', filename='dist/index.html'))
+    return render_template("dist/index.html")
 
 
 @app.route('/dictionary/product', methods=['GET'])
 def getProductAll():
     searchProduct = request.args.get("product_name")
     dao = DAOFactory.getDAOProduct()
-    if searchProduct == '':
+    if searchProduct is None:
         res = dao.getAllProduct()
         return dumps([e.toJSON() for e in res])
     else:
+        # app.logger.info(f"{searchProduct}")
         res = dao.getProductByNameLike(searchProduct)
+        # app.logger.info(f"{res}")
         return dumps([e.toJSON() for e in res])
 
 
@@ -91,26 +94,32 @@ def deleteProduct(productId):
 def getAllSales(productId):
     dao = DAOFactory.getDAOSale()
     sales = dao.getAllSaleByProductId(uuid.UUID(productId))
+    # app.logger.info(f"{sales}")
     if sales is None:
         return "", 404
     else:
         return dumps([e.toJSON() for e in sales])
 
 
+# todo it was a mistake. need to change this on POST method
+""" 
 @app.route('/dictionary/product/<productId>/sale', methods=['GET'])
 def getSalesById(productId):
     dao = DAOFactory.getDAOSale()
     sale = dao.getAllSaleByProductId(uuid.UUID(productId))
+    
     if sale is None:
         return "", 404
     else:
         return dumps(sale.toJSON())
+"""
 
 
 @app.route('/dictionary/product/<productId>/sale/<saleId>', methods=['GET'])
 def createNewSale(productId, saleId):
     dao = DAOFactory.getDAOSale()
     sales = dao.getSaleBySaleId(uuid.UUID(saleId))
+
     if sales is None:
         return "", 404
     else:
@@ -145,3 +154,9 @@ def deleteSale(productId, saleId):
     res = dao.deleteSaleById(uuid.UUID(saleId))
     if res == 1:
         return "", 201  # find more fit http code
+
+
+# todo create a normal prediction architecture
+@app.route('/dictionary/product/<productId>/prediction/<range_>', methods=['GET'])
+def getPrediction(productId, range_):
+    pass

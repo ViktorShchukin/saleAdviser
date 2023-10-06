@@ -39,7 +39,7 @@ class DAO:
 		return productId
 
 	def saveToDb (self, productId, quantity, total, saleMonth):
-		QUERY= """insert into sale (id,product_id,quantity,total_value,date) values (?,?,?,?,?)"""
+		QUERY= """insert into sale (id,product_id,quantity,total_value,date ) values (?,?,?,?,?)"""
 		saleId = str(uuid.uuid4())
 		self.sql.execute(QUERY, (saleId, productId, quantity, total, saleMonth))
 		return saleId
@@ -98,7 +98,7 @@ class DAO:
 		return products
 
 	def getProductById(self, productId):
-		QUERY = """select id,name from product where id=?"""
+		QUERY = """select * from product where id=?"""
 		res = self.sql.execute(QUERY, (productId,))
 		row = res.fetchone()
 		if row == None:
@@ -138,9 +138,9 @@ class DAO:
 
 
 if __name__ == "__main__":
-	dao = DAO('moms22.db')
-	dao.createTable()
-	dao.saveToDb(11,22,33,44,'2022-11-12')
+	dao = DAO('./database/main.db')
+	res = dao.getProductById("d6b9e0b6-807d-452b-80b0-c89c5cd75aaf")
+	print(res)
 	dao.commit()
 
 

@@ -1,6 +1,7 @@
 #
 import uuid
 import sqlite3
+from datetime import datetime, date
 
 from server.modules.adviserModel.product import Product
 from server.modules.adviserModel.sale import Sale
@@ -22,7 +23,7 @@ class DAOProduct(DAOProductBase):
 
     def deleteProduct(self, product: Product) -> int:
         QUERY = "delete from product where id=? "
-        res = self.sql.execute(__sql=QUERY, __parameters=(product.product_id,))
+        res = self.sql.execute(QUERY, (product.product_id,))
         return res.rowcount
 
     def deleteProductById(self, product_id) -> int:
@@ -60,7 +61,7 @@ class DAOProduct(DAOProductBase):
         QUERY = "select * from product where id=?"
         res = self.sql.execute(QUERY, (id_,))
         row = res.fetchone()
-        product = Product(row[0], row[1])
+        product = Product(product_id=uuid.UUID(row[0]), name=row[1])
         return product
 
     def checkProductExistByName(self, productName: str) -> bool:
@@ -73,7 +74,7 @@ class DAOProduct(DAOProductBase):
         row = res.fetchone()
         products = list()
         while row is not None:
-            product = Product(row[0], row[1])
+            product = Product(product_id=uuid.UUID(row[0]), name=row[1])
             products.append(product)
             row = res.fetchone()
         return products
@@ -106,7 +107,7 @@ class DAOSale(DaoSaleBase):
     def getAllSale(self) -> list:
         return super().getAllSale()
 
-    def getAllSaleByProductId(self, product_id) -> list:
+    def getAllSaleByProductId(self, product_id) -> list[Sale]:
         id_ = ""
         if type(product_id) == uuid.UUID:
             id_ = str(product_id)
@@ -117,7 +118,7 @@ class DAOSale(DaoSaleBase):
         row = res.fetchone()
         sales = list()
         while row is not None:
-            sale = Sale(row[0], row[1], row[2], row[3], row[4  ])
+            sale = Sale(uuid.UUID(row[0]), uuid.UUID(row[1]), int(row[2]), int(row[3]), datetime.fromisoformat(row[4]))
             sales.append(sale)
             row = res.fetchone()
         return sales

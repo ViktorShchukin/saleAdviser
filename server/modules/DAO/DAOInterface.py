@@ -91,7 +91,7 @@ class DaoSaleBase:
 		"""
 		pass
 
-	def getAllSaleByProductId(self, product_id: uuid.UUID) -> list:
+	def getAllSaleByProductId(self, product_id: uuid.UUID) -> list[Sale]:
 		"""
 		return List(Sale)
 		"""

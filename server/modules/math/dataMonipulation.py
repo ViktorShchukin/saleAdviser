@@ -1,5 +1,5 @@
 # 
-import modules.DAO.realizationDAO as realizationDAO
+import server.modules.DAO.realizationDAO as realizationDAO
 
 
 def createTableFunc (dao, productName: str) :
@@ -8,25 +8,25 @@ def createTableFunc (dao, productName: str) :
 	res = dao.getSalesByName(productName)
 	row = res.fetchone()
 	while row != None :
-		#print (row,'#')
+		# print (row,'#')
 		parseDate = row[1].split(' ')
 		parseDate = parseDate[0].split('-')
 		dateObject = Argument(int(parseDate[0]), int(parseDate[1]))
-		#print(f'==========={dateObject}')
+		# print(f'==========={dateObject}')
 		sales.append(row[0])
-		print('sales = ', sales)
+		# print('sales = ', sales)
 		date.append(dateObject)
-		#print(date)
+		# print(date)
 		row = res.fetchone()
 	return sales, date
 	
 
-class TableFunction :
+class TableFunction:
 	def __init__(self, arg, func) :
 		self.arg = arg
 		self.f = func
 
-	def value(self, x) :
+	def value(self, x):
 		result = 0
 		if x <= self.arg[0]:
 			result = self.f[0]
@@ -43,30 +43,32 @@ class TableFunction :
 						break 
 		return result		
 
-	def derivative(self, arg0) :
+	def derivative(self, arg0):
 		func0 = self.value(arg0)
 		arg1 = arg0 - 1
-		print ('вычитание внитри дериватива =', arg1)
+		# print('вычитание внитри дериватива =', arg1)
 		func1 = self.value(arg1)
 		derivative = (func1 - func0) / (arg1.deltaMonth(arg0))
-		return derivative #todo доделать 
+		return derivative  # todo доделать
+
 
 class Argument:
 	def __init__(self, year: int, month: int):
 		self.year = year
 		self.month = month
-		#make specification for input data todo
-	def __add__ (self, o):
+		# make specification for input data todo
+
+	def __add__(self, o):
 		return self.add(o)
 
 	def __sub__(self, o):
 		return self.minus(o)
 		#todo проверять тип входа, есть встроенная функция 
 
-	def __gt__ (self, o):
+	def __gt__(self, o):
 		return self.greaterThan(o)
 
-	def __ge__ (self, o):
+	def __ge__(self, o):
 		return self.greaterThanOrEqual(o)
 
 	def __lt__ (self, o):
@@ -126,7 +128,6 @@ class Argument:
 				deltaMonth = deltaYear*12 + self.month - o.month
 			return deltaMonth
 
-
 	def greaterThan(self, o) -> bool:
 		if self.deltaMonth(o) > 0:
 			return True
@@ -163,6 +164,10 @@ class Argument:
 		else:
 			return False
 
+	def toInt(self) -> int:
+		monthInYears = self.year * 12
+		allMonth = self.month + monthInYears
+		return allMonth
 
 def testArgument() :
 	november22 = Argument(2022, 10)

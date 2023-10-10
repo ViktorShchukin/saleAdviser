@@ -14,9 +14,13 @@ from server.config.Config import Config
 from server.modules.DAO.DAOFactory import DAOFactory
 from server.modules.adviserModel.product import Product
 from server.modules.adviserModel.sale import Sale
+from server.modules.math.PredictionCalculatorSimple import PredictionCalculatorSimple
+from server.modules.math.calculatorFactory import CalculatorFactory
+
 
 config = Config()
-DAOFactory = DAOFactory(config)
+daoFactory = DAOFactory(config)
+calculatorFactory = CalculatorFactory(config)
 
 app = Flask(__name__)
 
@@ -30,7 +34,7 @@ def getIndex():
 @app.route('/dictionary/product', methods=['GET'])
 def getProductAll():
     searchProduct = request.args.get("product_name")
-    dao = DAOFactory.getDAOProduct()
+    dao = daoFactory.getDAOProduct()
     if searchProduct is None:
         res = dao.getAllProduct()
         return dumps([e.toJSON() for e in res])
@@ -43,7 +47,7 @@ def getProductAll():
 
 @app.route('/dictionary/product/<productId>', methods=['GET'])
 def getProductById(productId):
-    dao = DAOFactory.getDAOProduct()
+    dao = daoFactory.getDAOProduct()
     product = dao.getProductById(uuid.UUID(productId))
     if product is None:
         return "", 404
@@ -54,7 +58,7 @@ def getProductById(productId):
 @app.route('/dictionary/product/', methods=['POST'])
 def createNewProduct():
     row = loads(request.data)
-    dao = DAOFactory.getDAOProduct()
+    dao = daoFactory.getDAOProduct()
     newProduct = Product(product_id=uuid.uuid4(), name=row['name'])
     product = dao.addProduct(newProduct)
     if product is None:
@@ -66,7 +70,7 @@ def createNewProduct():
 @app.route('/dictionary/product/<productId>', methods=['PUT'])
 def updateProduct(productId):
     row = loads(request.data)
-    dao = DAOFactory.getDAOProduct()
+    dao = daoFactory.getDAOProduct()
     product = dao.getProductById(uuid.UUID(productId))
     if product is None:
         return "", 404
@@ -81,7 +85,7 @@ def updateProduct(productId):
 
 @app.route('/dictionary/product/<productId>', methods=['DELETE'])
 def deleteProduct(productId):
-    dao = DAOFactory.getDAOProduct()
+    dao = daoFactory.getDAOProduct()
     res1 = dao.getProductById(uuid.UUID(productId))
     if res1 is None:
         return "", 404
@@ -92,7 +96,7 @@ def deleteProduct(productId):
 
 @app.route('/dictionary/product/<productId>/sale', methods=['GET'])
 def getAllSales(productId):
-    dao = DAOFactory.getDAOSale()
+    dao = daoFactory.getDAOSale()
     sales = dao.getAllSaleByProductId(uuid.UUID(productId))
     # app.logger.info(f"{sales}")
     if sales is None:
@@ -117,7 +121,7 @@ def getSalesById(productId):
 
 @app.route('/dictionary/product/<productId>/sale/<saleId>', methods=['GET'])
 def createNewSale(productId, saleId):
-    dao = DAOFactory.getDAOSale()
+    dao = daoFactory.getDAOSale()
     sales = dao.getSaleBySaleId(uuid.UUID(saleId))
 
     if sales is None:
@@ -129,7 +133,7 @@ def createNewSale(productId, saleId):
 @app.route('/dictionary/product/<productId>/sale/<saleId>', methods=['PUT'])
 def updateSale(productId, saleId):  # переделать порядок передачи переменных todo
     row = loads(request.data)
-    dao = DAOFactory.getDAOSale()
+    dao = daoFactory.getDAOSale()
     sale = dao.getSaleBySaleId(uuid.UUID(saleId))
     # ISOdate = datetime.strptime(row['saleMonth'], '%d.%m.%Y')
     date = datetime.fromisoformat(row['saleMonth'])
@@ -147,7 +151,7 @@ def updateSale(productId, saleId):  # переделать порядок пер
 
 @app.route('/dictionary/product/<productId>/sale/<saleId>', methods=['DELETE'])
 def deleteSale(productId, saleId):
-    dao = DAOFactory.getDAOSale()
+    dao = daoFactory.getDAOSale()
     sale1 = dao.getSaleBySaleId(uuid.UUID(saleId))
     if sale1 is None:
         return "", 404
@@ -159,4 +163,11 @@ def deleteSale(productId, saleId):
 # todo create a normal prediction architecture
 @app.route('/dictionary/product/<productId>/prediction/<range_>', methods=['GET'])
 def getPrediction(productId, range_):
-    pass
+    calculator = calculatorFactory.getCalculator(productId)
+    # todo recreate argument in predict method
+    arg_ = int(range_)
+    result = calculator.predict(argument=arg_)
+    # todo toJson return wrong things, refactor it
+    return dumps(result.toJson())
+
+

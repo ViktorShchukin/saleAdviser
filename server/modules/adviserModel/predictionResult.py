@@ -1,7 +1,7 @@
 #
 
 
-class PredictionResult :
+class PredictionResult:
 	def __init__(self, productId, value):
 		self.productId = productId
 		self.value = value
@@ -12,4 +12,5 @@ class PredictionResult :
 	def getValue(self):
 		return self.value
 
-
+	def toJson(self) -> dict:
+		return {'product_id': self.productId, 'value': self.value}

@@ -8,7 +8,7 @@ import server.config.Config as cn
 											("databaseName", "SQLite3")])
 def test_config_getParam(param, result):
 	"""
-	in future config object will accept file.json
+	in future config object will accept config.json
 	we need to parametrize different types of files and check behavior of object 
 
 	@pytest.mark.parametrize("file", [("f.xml"), ("f.json"), ("f.txt"), (None)])

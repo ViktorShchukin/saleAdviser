@@ -5,4 +5,4 @@
 . env/Scripts/activate
 
 export PYTHONPATH=/c/program1/gitHub-projects/saleAdviser/
-export FLASK_APP=server/server
+export FLASK_APP=app

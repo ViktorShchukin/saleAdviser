@@ -1,13 +1,13 @@
 #
-from modules.adviserModel.PredictionResult import PredictionResult
-from modules.math.dataMonipulation import TableFunction, Argument
+from server.modules.adviserModel.predictionResult import PredictionResult
+from server.modules.math.dataMonipulation import TableFunction, Argument
+
 
 class PredictionCalculator:
 
-	def __init__ (self, productId, tableFunction: TableFunction):
+	def __init__(self, productId):
 		self.productId = productId
-		self.tableFunction = tableFunction
 
-	def predict(self, argument: Argument)-> PredictionResult:
+	def predict(self, argument: Argument) -> PredictionResult:
 		pass
 

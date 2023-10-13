@@ -6,12 +6,12 @@ from sqlalchemy.orm import Session
 
 from server.modules.adviserModel.product import Product
 from server.modules.adviserModel.sale import Sale
-from server.modules.DAO.DAOInterface import DAOProduct, DAOSale
+import server.modules.DAO.DAOInterface as Base
 import server.modules.DAO.ormmodel.ORMmodel as orm
 from server.modules.DAO.mapper.mapperSQLAlchemy import MapperSQLAlchemy
 
 
-class DAOProduct(DAOProduct): # todo доделать реализации методов с алчеми
+class DAOProduct(Base.DAOProductBase): # todo доделать реализации методов с алчеми
 
 	def __init__(self, engine: sa.Engine): 
 		self.engine = engine
@@ -66,9 +66,31 @@ class DAOProduct(DAOProduct): # todo доделать реализации ме�
 		mapper = MapperSQLAlchemy()
 		with Session(self.engine) as session:
 			result = session.scalar(sa.select(orm.Product).where(orm.Product.id == product_id))
-			session.commit()
+			
 			mappedFromAlchemy = mapper.mapProductFromSQLAlchemy(result)
+			session.commit()
 			return mappedFromAlchemy
+
+	def getProductByName(self, product_name: str) -> Product:
+		mapper = MapperSQLAlchemy()
+		with Session(self.engine) as session:
+			result = session.scalar(sa.select(orm.Product).where(orm.Product.product_name == product_name))
+			
+			mappedFromAlchemy = mapper.mapProductFromSQLAlchemy(result)
+			session.commit()
+			return mappedFromAlchemy
+
+	def getProductByNameLike(self, searchProduct: str) -> list:
+		mapper = MapperSQLAlchemy()
+		with Session(self.engine) as session:
+			newProductName = "%" + searchProduct + "%"
+			result = session.query(orm.Product).filter(orm.Product.product_name.like(newProductName)).all()
+			listOfProduct = list()
+			for i in result:
+				mappedProduct = mapper.mapProductFromSQLAlchemy(i)
+				listOfProduct.append(mappedProduct)
+			session.commit()
+			return listOfProduct
 		
 
 	def checkProductExistByName(self, product: Product) -> uuid.UUID:
@@ -76,7 +98,7 @@ class DAOProduct(DAOProduct): # todo доделать реализации ме�
 		pass
 
 
-class DAOSale(DAOSale): # todo доделать реализации методов с алчеми
+class DAOSale(Base.DaoSaleBase): # todo доделать реализации методов с алчеми
 
 	def __init__(self, engine):
 		self.engine = engine
@@ -122,22 +144,32 @@ class DAOSale(DAOSale): # todo доделать реализации метод�
 		mapper = MapperSQLAlchemy()
 		with Session(self.engine) as session:
 			result = session.scalars(sa.select(orm.Sale)).all()
-			session.commit()
+			
 			listOfSale = list()
 			for i in result:
 				mappedSale = mapper.mapSaleFromSQLAlchemy(i)
 				listOfSale.append(mappedSale)
+			session.commit()
 			return listOfSale
 
 	def getAllSaleByProductId(self, product_id: uuid.UUID) -> list:
 		mapper = MapperSQLAlchemy()
 		with Session(self.engine) as session:
+			#print(product_id)
+			#print(type(product_id))
+			#print(type(orm.Sale.product_id))
+			
+
 			result = session.scalars(sa.select(orm.Sale).where(orm.Sale.product_id == product_id)).all()
-			session.commit()
+			
+			#print(result, "==")
+			
+
 			listOfSale = list()
 			for i in result:
 				mappedSale = mapper.mapSaleFromSQLAlchemy(i)
 				listOfSale.append(mappedSale)
+			session.commit()
 			return listOfSale
 		
 	def getSaleBySaleId(self, sale_id: uuid.UUID) -> Sale:
@@ -155,3 +187,16 @@ class DAOSale(DAOSale): # todo доделать реализации метод�
 
 
 
+if __name__ == '__main__':
+	engine = sa.create_engine(f"sqlite+pysqlite:///./database/main.db")
+	daoSale = DAOSale(engine)
+	print("rows in sale table= ", len(daoSale.getAllSale()))
+	res = daoSale.getAllSaleByProductId(uuid.UUID("d6b9e0b6-807d-452b-80b0-c89c5cd75aaf"))
+	print(res)
+	daoProduct = DAOProduct(engine)
+	res2 = daoProduct.getAllProduct()
+	print(len(res2))
+	res3 = daoProduct.getProductById(uuid.UUID("d6b9e0b6-807d-452b-80b0-c89c5cd75aaf"))
+	print(res3)
+	res4 = daoProduct.getProductByName('"""O2 ACTIVE"", средство для дезинфекции воды бассейнов, 5л"')
+	print(res4)

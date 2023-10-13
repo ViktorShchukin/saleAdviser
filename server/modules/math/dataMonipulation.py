@@ -1,5 +1,5 @@
 # 
-import modules.DAO.realizationDAO as realizationDAO
+import server.modules.DAO.realizationDAO as realizationDAO
 
 
 def createTableFunc (dao, productName: str) :
@@ -8,65 +8,77 @@ def createTableFunc (dao, productName: str) :
 	res = dao.getSalesByName(productName)
 	row = res.fetchone()
 	while row != None :
-		#print (row,'#')
+		# print (row,'#')
 		parseDate = row[1].split(' ')
 		parseDate = parseDate[0].split('-')
 		dateObject = Argument(int(parseDate[0]), int(parseDate[1]))
-		#print(f'==========={dateObject}')
+		# print(f'==========={dateObject}')
 		sales.append(row[0])
-		print('sales = ', sales)
+		# print('sales = ', sales)
 		date.append(dateObject)
-		#print(date)
+		# print(date)
 		row = res.fetchone()
 	return sales, date
 	
 
-class TableFunction :
+class TableFunction:
 	def __init__(self, arg, func) :
 		self.arg = arg
 		self.f = func
 
-	def value(self, x) :
+	def value(self, x):
+		"""
+		return the value (F(x)) of the given argument
+
+		if argument is out of range that stored in
+		it return the first or last value
+
+		if argument is between
+		it return approximate value
+		there is used linear interpolation
+		"""
 		result = 0
 		if x <= self.arg[0]:
 			result = self.f[0]
-		elif x >= self.arg[len(self.arg) - 1] :
+		elif x >= self.arg[len(self.arg) - 1]:
 			result = self.f[len(self.arg) - 1]
-		else :
-			for i in range(len(self.arg) - 1) :
-				if x == self.arg[i] :
+		else:
+			for i in range(len(self.arg) - 1):
+				if x == self.arg[i]:
 					result = self.f[i]
 					break 
-				else :
-					if x > self.arg[i] and x < self.arg[i + 1] :
-						result = self.f[i] + (self.f[i+1]-self.f[i]) * (x - self.arg[i]) / (self.arg[i+1] - self.arg[i])
+				else:
+					if x > self.arg[i] and x < self.arg[i + 1]:
+						result = self.f[i] + (self.f[i+1]-self.f[i]) * x.deltaMonth(self.arg[i]) / self.arg[i+1].deltaMonth(self.arg[i])
 						break 
 		return result		
 
-	def derivative(self, arg0) :
+	def derivative(self, arg0):
 		func0 = self.value(arg0)
 		arg1 = arg0 - 1
-		print ('вычитание внитри дериватива =', arg1)
+		# print('вычитание внитри дериватива =', arg1)
 		func1 = self.value(arg1)
 		derivative = (func1 - func0) / (arg1.deltaMonth(arg0))
-		return derivative #todo доделать 
+		return derivative  # todo доделать
+
 
 class Argument:
 	def __init__(self, year: int, month: int):
 		self.year = year
 		self.month = month
-		#make specification for input data todo
-	def __add__ (self, o):
+		# make specification for input data todo
+
+	def __add__(self, o):
 		return self.add(o)
 
 	def __sub__(self, o):
 		return self.minus(o)
 		#todo проверять тип входа, есть встроенная функция 
 
-	def __gt__ (self, o):
+	def __gt__(self, o):
 		return self.greaterThan(o)
 
-	def __ge__ (self, o):
+	def __ge__(self, o):
 		return self.greaterThanOrEqual(o)
 
 	def __lt__ (self, o):
@@ -83,6 +95,9 @@ class Argument:
 
 	def __str__ (self):
 		return f"{self.year}-{self.month}"
+
+	def __repr__(self):
+		return f"Argument({self.year}, {self.month})"
 
 	def add(self, o) :
 		if type(o) == int:
@@ -126,7 +141,6 @@ class Argument:
 				deltaMonth = deltaYear*12 + self.month - o.month
 			return deltaMonth
 
-
 	def greaterThan(self, o) -> bool:
 		if self.deltaMonth(o) > 0:
 			return True
@@ -163,6 +177,10 @@ class Argument:
 		else:
 			return False
 
+	def toInt(self) -> int:
+		monthInYears = self.year * 12
+		allMonth = self.month + monthInYears
+		return allMonth
 
 def testArgument() :
 	november22 = Argument(2022, 10)
@@ -212,20 +230,20 @@ def testTableFunctionDerivativeMethod () :
 	pass
 
 def lagrangePolinomial (sales, date) :
-	pass #todo
+	pass # todo
 
 
 if __name__ == "__main__" :
 	
 	dao = realizationDAO.DAO('moms1.db')
 
-	testArgument ()
+	testArgument()
 
-	testArgument0 ()
+	testArgument0()
 
-	testTableFunctionValueMethod ()
+	testTableFunctionValueMethod()
 
-	testTableFunctionDerivativeMethod ()
+	testTableFunctionDerivativeMethod()
 
 	#readAboutHowToDoTests todo
 	#pip(done) прочитать про утилиту и env(собирать проект) 

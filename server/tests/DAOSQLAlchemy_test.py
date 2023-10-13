@@ -46,12 +46,10 @@ class TestDAOSQLAlchemyProduct:
 		finally:
 			database.removeDatabase()
 
-		 
+		# DAOSale = al.DAOSale(self.engine)
+		# assert type(DAOSale) == al.DAOSale
 		
-		#DAOSale = al.DAOSale(self.engine)
-		#assert type(DAOSale) == al.DAOSale
-		
-	#@pytest.mark.parametrize("param, result", [()])
+	# @pytest.mark.parametrize("param, result", [()])
 	def test_addProduct_positive(self, ):
 		database = TemporaryFile()
 		database.crateDatabase()
@@ -62,7 +60,7 @@ class TestDAOSQLAlchemyProduct:
 			DAOProduct = al.DAOProduct(engine)
 			newProduct = Product(product_id = (testId), name = "firstProduct")
 			result = DAOProduct.addProduct(newProduct)
-			assert str(result.product_id) ==  "06335e84-2872-4914-8c5d-3ed07d2a2f16"
+			assert str(result.product_id) == "06335e84-2872-4914-8c5d-3ed07d2a2f16"
 
 		finally:
 			database.removeDatabase()

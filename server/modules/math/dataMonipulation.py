@@ -27,19 +27,29 @@ class TableFunction:
 		self.f = func
 
 	def value(self, x):
+		"""
+		return the value (F(x)) of the given argument
+
+		if argument is out of range that stored in
+		it return the first or last value
+
+		if argument is between
+		it return approximate value
+		there is used linear interpolation
+		"""
 		result = 0
 		if x <= self.arg[0]:
 			result = self.f[0]
-		elif x >= self.arg[len(self.arg) - 1] :
+		elif x >= self.arg[len(self.arg) - 1]:
 			result = self.f[len(self.arg) - 1]
-		else :
-			for i in range(len(self.arg) - 1) :
-				if x == self.arg[i] :
+		else:
+			for i in range(len(self.arg) - 1):
+				if x == self.arg[i]:
 					result = self.f[i]
 					break 
-				else :
-					if x > self.arg[i] and x < self.arg[i + 1] :
-						result = self.f[i] + (self.f[i+1]-self.f[i]) * (x - self.arg[i]) / (self.arg[i+1] - self.arg[i])
+				else:
+					if x > self.arg[i] and x < self.arg[i + 1]:
+						result = self.f[i] + (self.f[i+1]-self.f[i]) * x.deltaMonth(self.arg[i]) / self.arg[i+1].deltaMonth(self.arg[i])
 						break 
 		return result		
 
@@ -85,6 +95,9 @@ class Argument:
 
 	def __str__ (self):
 		return f"{self.year}-{self.month}"
+
+	def __repr__(self):
+		return f"Argument({self.year}, {self.month})"
 
 	def add(self, o) :
 		if type(o) == int:
@@ -217,20 +230,20 @@ def testTableFunctionDerivativeMethod () :
 	pass
 
 def lagrangePolinomial (sales, date) :
-	pass #todo
+	pass # todo
 
 
 if __name__ == "__main__" :
 	
 	dao = realizationDAO.DAO('moms1.db')
 
-	testArgument ()
+	testArgument()
 
-	testArgument0 ()
+	testArgument0()
 
-	testTableFunctionValueMethod ()
+	testTableFunctionValueMethod()
 
-	testTableFunctionDerivativeMethod ()
+	testTableFunctionDerivativeMethod()
 
 	#readAboutHowToDoTests todo
 	#pip(done) прочитать про утилиту и env(собирать проект) 

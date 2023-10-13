@@ -2,9 +2,10 @@
 
 
 class PredictionResult:
-	def __init__(self, productId, value):
+	def __init__(self, productId, value, range):
 		self.productId = productId
 		self.value = value
+		self.range = range
 
 	def getProductId(self):
 		return self.productId
@@ -13,4 +14,4 @@ class PredictionResult:
 		return self.value
 
 	def toJson(self) -> dict:
-		return {'product_id': self.productId, 'value': self.value}
+		return {'product_id': self.productId, 'value': self.value, 'range': self.range}

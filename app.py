@@ -16,6 +16,7 @@ from server.modules.adviserModel.product import Product
 from server.modules.adviserModel.sale import Sale
 from server.modules.math.PredictionCalculatorSimple import PredictionCalculatorSimple
 from server.modules.math.calculatorFactory import CalculatorFactory
+from server.modules.math.dataMonipulation import Argument
 
 
 config = Config()
@@ -165,7 +166,9 @@ def deleteSale(productId, saleId):
 def getPrediction(productId, range_):
     calculator = calculatorFactory.getCalculator(productId)
     # todo recreate argument in predict method
-    arg_ = int(range_)
+    arg_: Argument = None
+    if range_ == "30":
+        arg_ = Argument(0, 1)
     result = calculator.predict(argument=arg_)
     # todo toJson return wrong things, refactor it
     return dumps(result.toJson())

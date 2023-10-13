@@ -24,7 +24,6 @@ class PredictionCalculatorSimple(PredictionCalculator):
 		date = []
 		daoSale = daoFactory.getDAOSale()
 		res = daoSale.getAllSaleByProductId(product_id=self.productId)
-		pass
 		for sale in res:
 			sales.append(sale.quantity)
 			date.append(Argument(year=sale.date.year, month=sale.date.month))
@@ -32,14 +31,13 @@ class PredictionCalculatorSimple(PredictionCalculator):
 
 	def predict(self, argument: Argument) -> PredictionResult:
 		validatedArgument: Argument
-		if type(argument) is not Argument:
-			today = datetime.now()
-			validatedArgument = Argument(year=today.year, month=today.month + argument/30)
+		today = datetime.now()
+		validatedArgument = Argument(year=today.year + argument.year, month=today.month + argument.month)
 		tableFunction = self.initTableFunction()
 		lastKnownArg = tableFunction.arg[len(tableFunction.arg) - 1]
 		derivative = tableFunction.derivative(lastKnownArg)
-		prediction = tableFunction.value(lastKnownArg) + derivative * (validatedArgument - lastKnownArg).toInt()
-		return PredictionResult(productId=self.productId, value=prediction)
+		prediction = tableFunction.value(lastKnownArg) + derivative * validatedArgument.deltaMonth(lastKnownArg)
+		return PredictionResult(productId=self.productId, value=prediction, range=argument.month)
 		# todo все херня. Надо переделывать весь модуль math
 
 

@@ -5,7 +5,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 @SpringBootApplication
-@EnableJpaRepositories("com.anorisno.appDataTool.repository")
+@EnableJpaRepositories("ru.aquamarina.saleadviser.repository")
 public class SaleadviserApplication {
 
 	public static void main(String[] args) {

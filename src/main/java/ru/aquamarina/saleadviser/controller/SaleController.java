@@ -41,6 +41,8 @@ public class SaleController {
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
+    // todo check if product id from path and body are the same
+    // todo for all methods and for product too
     @PostMapping
     public ResponseEntity<SaleDTO> create(@NonNull @PathVariable("productId") UUID productId,
                                           @NonNull @RequestBody SaleDTO saleDTO) {
@@ -59,6 +61,7 @@ public class SaleController {
                 .orElseGet(ResponseEntity.notFound()::build);
     }
 
+    // todo should i check does this entity exist???
     @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@NonNull @PathVariable("productId") UUID productId,
                                     @NonNull @PathVariable("id") UUID id) {

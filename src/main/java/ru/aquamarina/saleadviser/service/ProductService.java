@@ -38,4 +38,10 @@ public class ProductService {
     public void delete(UUID id){
         productRepository.deleteById(id);
     }
+
+    public UUID getIdByNameOrSave(String name) {
+        return productRepository.findByName(name)
+                .map(Product::getId)
+                .orElseGet(() -> save(name).getId());
+    }
 }

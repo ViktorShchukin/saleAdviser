@@ -19,6 +19,12 @@ public interface SaleTool {
                 float totalSum,
                 ZonedDateTime saleDate);
 
+    @Mapping(target = "id", expression = "java(java.util.UUID.randomUUID())")
+    Sale create(UUID productId,
+                String quantity,
+                String totalSum,
+                String saleDate);
+
     @Mapping(target = "id", ignore = true)
     Sale updata(@MappingTarget Sale toUpdate, Sale fromUpdate);
 }

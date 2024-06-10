@@ -55,8 +55,9 @@ public class SaleService {
         saleRepository.deleteById(id);
     }
 
-    // todo ad this
+    // todo end this
     // todo should i close stream
+    // todo accept ImputStream and then BufferedReader(ImputStream) and then process
     public void handleFileWithSales(MultipartFile file) throws IOException {
         File targetFile = File.createTempFile("tmp", ".csv");
         try (InputStream inputStream = file.getInputStream()) {

@@ -74,7 +74,8 @@ public class SaleController {
     @PostMapping("/sale/file/upload")
     public ResponseEntity<?> uploadFileWithSale(@RequestParam("file") MultipartFile file) {
         try {
-            saleService.handleFileWithSales(file);
+            saleService.handleFileWithSales(file.getInputStream());
+            // todo is this right?? I mean return
             return ResponseEntity.ok().build();
         } catch (IOException e) {
             // todo maybe send the message???

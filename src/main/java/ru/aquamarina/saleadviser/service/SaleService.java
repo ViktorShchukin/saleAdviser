@@ -4,14 +4,12 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import ru.aquamarina.saleadviser.controller.dto.SaleDTO;
+import ru.aquamarina.saleadviser.model.Product;
 import ru.aquamarina.saleadviser.model.Sale;
 import ru.aquamarina.saleadviser.repository.SaleRepository;
 import ru.aquamarina.saleadviser.service.tool.SaleTool;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -26,6 +24,7 @@ public class SaleService {
 
     private final SaleRepository saleRepository;
     private final SaleTool saleTool;
+    private final ProductService productService;
 
     public List<Sale> getAllByProductId(UUID productId) {
         return saleRepository.findAllByProductId(productId);
@@ -58,25 +57,38 @@ public class SaleService {
     // todo end this
     // todo should i close stream
     // todo accept ImputStream and then BufferedReader(ImputStream) and then process
-    public void handleFileWithSales(MultipartFile file) throws IOException {
-        File targetFile = File.createTempFile("tmp", ".csv");
-        try (InputStream inputStream = file.getInputStream()) {
-            Files.copy(
-                    inputStream,
-                    targetFile.toPath(),
-                    StandardCopyOption.REPLACE_EXISTING);
-        }
-//        Charset charset =
-        try (BufferedReader reader = Files.newBufferedReader(targetFile.toPath())) {
+    public void handleFileWithSales(InputStream stream) throws IOException {
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(stream))) {
             String line = null;
             while ((line = reader.readLine()) != null) {
-                // todo doing operation on line
+                Sale sale = parseLine(line);
+                saleRepository.save(sale);
             }
         } catch (IOException e) {
             System.err.format("IOException with sales file in saleService: %s%n", e);
         }
-        targetFile.delete();
+
     }
 
 
+    // no need to this. but I can't delete it
+    private String readLine(Reader reader) throws IOException {
+        int ch;
+        StringBuilder stringBuilder = new StringBuilder();
+        while ((ch = reader.read()) != '\n') {
+            stringBuilder.append(ch);
+        }
+        if (!stringBuilder.isEmpty()) {
+            return stringBuilder.toString();
+        } else {
+            return null;
+        }
+    }
+
+    private Sale parseLine(String string) {
+        // todo it's not save. I can't be sure that string contains required parts
+        String[] splitRes = string.split(";");
+        UUID productId = productService.getIdByNameOrSave(splitRes[0]);
+        return saleTool.create(productId, splitRes[2], splitRes[3], splitRes[1]);
+    }
 }

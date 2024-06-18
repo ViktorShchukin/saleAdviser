@@ -2,18 +2,11 @@ package ru.aquamarina.saleadviser.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
-import ru.aquamarina.saleadviser.controller.dto.SaleDTO;
-import ru.aquamarina.saleadviser.model.Product;
 import ru.aquamarina.saleadviser.model.Sale;
 import ru.aquamarina.saleadviser.repository.SaleRepository;
 import ru.aquamarina.saleadviser.service.tool.SaleTool;
 
 import java.io.*;
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.StandardCopyOption;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -46,7 +39,7 @@ public class SaleService {
 
     public Optional<Sale> update(Sale sale) {
         return saleRepository.findById(sale.getId())
-                .map(old -> saleTool.updata(old, sale))
+                .map(old -> saleTool.update(old, sale))
                 .map(saleRepository::save);
     }
 

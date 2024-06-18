@@ -26,5 +26,5 @@ public interface SaleTool {
                 String saleDate);
 
     @Mapping(target = "id", ignore = true)
-    Sale updata(@MappingTarget Sale toUpdate, Sale fromUpdate);
+    Sale update(@MappingTarget Sale toUpdate, Sale fromUpdate);
 }

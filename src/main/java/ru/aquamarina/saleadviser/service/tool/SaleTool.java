@@ -5,11 +5,14 @@ import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 import ru.aquamarina.saleadviser.config.AppMapperConfig;
 import ru.aquamarina.saleadviser.model.Sale;
+import ru.aquamarina.saleadviser.model.TableFunction;
 
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Mapper(config = AppMapperConfig.class)
@@ -37,19 +40,48 @@ public interface SaleTool {
         ZoneId zone = ZoneId.of("UTC");
         DateTimeFormatter formatter1 = DateTimeFormatter.ofPattern("dd.MM.yyyy' 'HH:mm:ss").withZone(zone);
         DateTimeFormatter formatter2 = DateTimeFormatter.ofPattern("dd.MM.yyyy' 'H:mm:ss").withZone(zone);
-        try{
+        try {
             parsed = ZonedDateTime.parse(dateTime, formatter1);
             return parsed;
-        } catch (Exception ignored){
+        } catch (Exception ignored) {
 
         }
         try {
             parsed = ZonedDateTime.parse(dateTime, formatter2);
             return parsed;
-        }catch (Exception e) {
+        } catch (Exception e) {
             // todo change this to put it to log instead of throw exception
             throw new Exception("sale dateTime parsing error", e);
         }
 
+    }
+
+    default TableFunction toTableFunction(List<Sale> saleList) {
+        TableFunction function = new TableFunction();
+        function.setListQuantity(toListQuantity(saleList));
+        function.setListDate(toListDateTime(saleList));
+        return function;
+    }
+
+    // todo write test for this.
+    default List<ZonedDateTime> toListDateTime(List<Sale> saleList) {
+        List<ZonedDateTime> dateList = new ArrayList<ZonedDateTime>();
+        int i = 0;
+        while (i < saleList.size()) {
+            dateList.add(saleList.get(i).getSaleDate());
+            i++;
+        }
+        return dateList;
+    }
+
+    // todo write test for this
+    default int[] toListQuantity(List<Sale> saleList) {
+        int[] quantityList = new int[saleList.size()];
+        int i = 0;
+        while (i < saleList.size()) {
+            quantityList[i] = saleList.get(i).getQuantity();
+            i++;
+        }
+        return quantityList;
     }
 }

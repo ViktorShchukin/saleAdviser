@@ -8,8 +8,10 @@ import ru.aquamarina.saleadviser.controller.dto.ProductDTO;
 import ru.aquamarina.saleadviser.controller.mappers.PredictionMapper;
 import ru.aquamarina.saleadviser.controller.mappers.ProductMapper;
 import ru.aquamarina.saleadviser.model.Prediction;
+import ru.aquamarina.saleadviser.model.Sale;
 import ru.aquamarina.saleadviser.service.PredictionService;
 import ru.aquamarina.saleadviser.service.ProductService;
+import ru.aquamarina.saleadviser.service.SaleService;
 
 import java.time.ZonedDateTime;
 import java.util.List;
@@ -22,16 +24,18 @@ public class ProductController {
 
     private final ProductService productService;
     private final PredictionService predictionService;
+    private final SaleService saleService;
     private final ProductMapper productMapper;
     private final PredictionMapper predictionMapper;
 
     public ProductController(ProductService productService,
                              ProductMapper productMapper,
                              PredictionService predictionService,
-                             PredictionMapper predictionMapper) {
+                             SaleService saleService, PredictionMapper predictionMapper) {
         this.productService = productService;
         this.predictionService = predictionService;
         this.productMapper = productMapper;
+        this.saleService = saleService;
         this.predictionMapper = predictionMapper;
     }
 
@@ -73,7 +77,9 @@ public class ProductController {
 
     @GetMapping("/{id}/prediction/{date}")
     public ResponseEntity<PredictionDTO> getPrediction(@NonNull @PathVariable("id") UUID id,
-                                                       @NonNull @PathVariable("date") ZonedDateTime date) {
-        return ResponseEntity.ok(predictionMapper.toDto(predictionService.get(date)));
+                                                       @NonNull @PathVariable("date") ZonedDateTime targetDate) {
+        List<Sale> saleList = saleService.getAllByProductId(id);
+        Prediction prediction = predictionService.get(saleList, targetDate);
+        return ResponseEntity.ok(predictionMapper.toDto(prediction));
     }
 }

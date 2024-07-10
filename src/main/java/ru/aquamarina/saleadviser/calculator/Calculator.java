@@ -6,5 +6,5 @@ import java.time.ZonedDateTime;
 
 public interface Calculator {
 
-    Prediction get(ZonedDateTime targetDate);
+    Prediction predict(ZonedDateTime targetDate);
 }

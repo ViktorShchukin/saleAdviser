@@ -1,6 +1,7 @@
 package ru.aquamarina.saleadviser.model;
 
 import java.time.ZonedDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 // todo add methods to return at least derivative and other...
@@ -32,6 +33,34 @@ public class TableFunction {
 
     public void setListDate(List<ZonedDateTime> listDate) {
         this.listDate = listDate;
+    }
+
+    // todo create interpolation
+    //     todo maybe should return optional and if given argument is out of range return optional.empty??
+    // todo create tests
+
+    /**
+     * if this function doesn't contain a passed argument it will be interpolated
+     * if the passed argument is less or greater than min or max, return min or max of the function
+     * @param dateTime passed argument
+     * @return value of the passed argument
+     */
+    public int getValue(ZonedDateTime dateTime) {
+        int index = listDate.indexOf(dateTime);
+        return listQuantity[index];
+    }
+
+    // todo create tests
+    // todo what i should do with delta
+    // todo i use delta in 1 month but sales are listed with minute precision
+    // todo implement normal derivative. Maybe with Gradient descent
+    public int derivative(ZonedDateTime dateTime) {
+        int delta = 1; // delta in months
+        int value = getValue(dateTime);
+        ZonedDateTime dateTimeWithDelta = dateTime.minusMonths(delta);
+        int valueWithDelta = getValue(dateTimeWithDelta);
+
+        return (valueWithDelta - value) / delta;
     }
 
 

@@ -58,6 +58,8 @@ public interface SaleTool {
 
     default TableFunction toTableFunction(List<Sale> saleList) {
         TableFunction function = new TableFunction();
+        // todo is it normal?? about how i get product id???
+        function.setProductId(saleList.get(0).getProductId());
         function.setListQuantity(toListQuantity(saleList));
         function.setListDate(toListDateTime(saleList));
         return function;

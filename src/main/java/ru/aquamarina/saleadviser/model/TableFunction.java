@@ -3,18 +3,21 @@ package ru.aquamarina.saleadviser.model;
 import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
+import java.util.UUID;
 
 // todo add methods to return at least derivative and other...
 // abstraction to calculate
 public class TableFunction {
 
+    UUID productId;
     int[] listQuantity;
     List<ZonedDateTime> listDate;
 
     public TableFunction() {
     }
 
-    public TableFunction(int[] quantity, List<ZonedDateTime> listDate) {
+    public TableFunction(UUID productId, int[] quantity, List<ZonedDateTime> listDate) {
+        this.productId = productId;
         this.listQuantity = quantity;
         this.listDate = listDate;
     }
@@ -35,6 +38,13 @@ public class TableFunction {
         this.listDate = listDate;
     }
 
+    public UUID getProductId() {
+        return productId;
+    }
+
+    public void setProductId(UUID productId) {
+        this.productId = productId;
+    }
     // todo create interpolation
     //     todo maybe should return optional and if given argument is out of range return optional.empty??
     // todo create tests
@@ -42,6 +52,7 @@ public class TableFunction {
     /**
      * if this function doesn't contain a passed argument it will be interpolated
      * if the passed argument is less or greater than min or max, return min or max of the function
+     *
      * @param dateTime passed argument
      * @return value of the passed argument
      */

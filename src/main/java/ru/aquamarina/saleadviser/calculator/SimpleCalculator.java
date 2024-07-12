@@ -14,7 +14,16 @@ public class SimpleCalculator implements Calculator {
 
     @Override
     public Prediction predict(ZonedDateTime targetDate) {
-        return new Prediction();
+        ZonedDateTime currentTime = ZonedDateTime.now();
+        int derivative = tableFunction.derivative(targetDate);
+        int lastSaleQuantity = tableFunction.getValue(currentTime);
+        int predictionQuantity = derivative - lastSaleQuantity;
+        Prediction prediction = new Prediction();
+        prediction.setProductId(tableFunction.getProductId());
+        prediction.setValue(predictionQuantity);
+        prediction.setPredictionDate(targetDate);
+        prediction.setTimestamp(currentTime);
+        return prediction;
     }
 
     public TableFunction getTableFunction() {

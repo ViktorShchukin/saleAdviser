@@ -20,6 +20,7 @@ public class PredictionService {
         this.saleTool = saleTool;
     }
 
+    // todo don't do late initialization
     public Prediction get(List<Sale> saleList, ZonedDateTime targetDate) {
         SimpleCalculator calculator = new SimpleCalculator();
         calculator.setTableFunction(saleTool.toTableFunction(saleList));

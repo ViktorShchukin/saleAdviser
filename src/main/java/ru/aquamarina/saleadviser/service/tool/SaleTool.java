@@ -56,6 +56,7 @@ public interface SaleTool {
 
     }
 
+    // todo make shure that saleList is not nulll
     default TableFunction toTableFunction(List<Sale> saleList) {
         TableFunction function = new TableFunction();
         // todo is it normal?? about how i get product id???

@@ -27,6 +27,8 @@ public class SaleService {
         return saleRepository.findById(uuid);
     }
 
+    // todo make all transactional
+    // todo find out if i can return optional
     public Sale create(Sale sale) {
         Sale newSale = saleTool.create(
                 sale.getId(),
@@ -50,6 +52,8 @@ public class SaleService {
     // todo end this
     // todo should i close stream
     // todo accept ImputStream and then BufferedReader(ImputStream) and then process
+    // todo it should be outside my core logic. Maybe in api.rest
+    // todo make it like in ppudgy project with consumer and validation of parsed string
     public void handleFileWithSales(InputStream stream) throws IOException {
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(stream))) {
             String line = null;

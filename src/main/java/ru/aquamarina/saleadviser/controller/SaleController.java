@@ -14,10 +14,13 @@ import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
 
+// todo at first implement interface then extend it and create logic. Leave annotation in interface
+// todo handle exceptions with @ControllerAdvice and @ExceptionHandler
 @RestController
 @RequestMapping("/dictionary")
 public class SaleController {
 
+    // todo make it final
     private SaleMapper saleMapper;
     private SaleService saleService;
 
@@ -26,8 +29,9 @@ public class SaleController {
         this.saleService = saleService;
     }
 
+    // todo make it Pageable
     @GetMapping("/product/{productId}/sale")
-    public ResponseEntity<List<SaleDTO>> getAllByProductId(@NonNull @PathVariable("productId") UUID productId){
+    public ResponseEntity<List<SaleDTO>> getAllByProductId(@NonNull @PathVariable("productId") UUID productId) {
         return ResponseEntity.ok(
                 saleMapper.mapToDTO(
                         saleService.getAllByProductId(productId)));
@@ -52,6 +56,7 @@ public class SaleController {
         return ResponseEntity.ok(saleMapper.mapToDTO(saved));
     }
 
+    // todo crate validation fo id and productId from route and object. mayge use assert and id.equals
     @PutMapping("/product/{productId}/sale/{id}")
     public ResponseEntity<SaleDTO> update(@NonNull @PathVariable("productId") UUID productId,
                                           @NonNull @PathVariable("id") UUID id,
@@ -71,6 +76,7 @@ public class SaleController {
         return ResponseEntity.noContent().build();
     }
 
+    // todo think about the validation of MultipartFile
     @PostMapping("/sale/file/upload")
     public ResponseEntity<?> uploadFileWithSale(@RequestParam("file") MultipartFile file) {
         try {

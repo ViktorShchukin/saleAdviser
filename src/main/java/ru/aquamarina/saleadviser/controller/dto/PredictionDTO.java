@@ -5,6 +5,8 @@ import java.util.UUID;
 
 public class PredictionDTO {
 
+    // todo can use @JsonProperty and @JsonSerialize
+    // todo use javax.validation
     UUID productId;
     float value;
     ZonedDateTime timestamp; // when prediction was made

@@ -5,8 +5,6 @@ import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.UUID;
 
-// todo add methods to return at least derivative and other...
-// abstraction to calculate
 public class TableFunction {
 
     UUID productId;
@@ -46,7 +44,7 @@ public class TableFunction {
         this.productId = productId;
     }
     // todo create interpolation
-    //     todo maybe should return optional and if given argument is out of range return optional.empty??
+    // todo maybe should return optional and if given argument is out of range return optional.empty??
     // todo create tests
 
     /**

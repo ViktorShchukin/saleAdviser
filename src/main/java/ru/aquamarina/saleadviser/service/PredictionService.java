@@ -5,7 +5,6 @@ import ru.aquamarina.saleadviser.calculator.Calculator;
 import ru.aquamarina.saleadviser.calculator.SimpleCalculator;
 import ru.aquamarina.saleadviser.model.Prediction;
 import ru.aquamarina.saleadviser.model.Sale;
-import ru.aquamarina.saleadviser.model.TableFunction;
 import ru.aquamarina.saleadviser.service.tool.SaleTool;
 
 import java.time.ZonedDateTime;
@@ -20,10 +19,8 @@ public class PredictionService {
         this.saleTool = saleTool;
     }
 
-    // todo don't do late initialization
     public Prediction get(List<Sale> saleList, ZonedDateTime targetDate) {
-        SimpleCalculator calculator = new SimpleCalculator();
-        calculator.setTableFunction(saleTool.toTableFunction(saleList));
+        Calculator calculator = new SimpleCalculator(saleTool.toTableFunction(saleList));
         return calculator.predict(targetDate);
     }
 }

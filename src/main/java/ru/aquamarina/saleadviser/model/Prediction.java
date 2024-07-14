@@ -17,6 +17,6 @@ public class Prediction {
 
     UUID productId;
     float value;
-    ZonedDateTime timestamp; // when prediction was made
     ZonedDateTime predictionDate; // the target date of prediction
+    ZonedDateTime timestamp; // when prediction was made
 }

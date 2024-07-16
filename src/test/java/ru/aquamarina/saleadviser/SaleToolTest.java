@@ -2,8 +2,8 @@ package ru.aquamarina.saleadviser;
 
 import org.junit.jupiter.api.Test;
 import org.mapstruct.factory.Mappers;
-import ru.aquamarina.saleadviser.model.Sale;
-import ru.aquamarina.saleadviser.service.tool.SaleTool;
+import ru.aquamarina.saleadviser.core.model.Sale;
+import ru.aquamarina.saleadviser.core.tools.SaleTool;
 
 import java.time.ZonedDateTime;
 import java.util.ArrayList;

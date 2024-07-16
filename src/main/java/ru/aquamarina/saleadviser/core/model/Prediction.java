@@ -1,4 +1,4 @@
-package ru.aquamarina.saleadviser.model;
+package ru.aquamarina.saleadviser.core.model;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;

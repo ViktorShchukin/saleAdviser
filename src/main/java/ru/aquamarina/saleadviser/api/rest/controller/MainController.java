@@ -1,4 +1,4 @@
-package ru.aquamarina.saleadviser.controller;
+package ru.aquamarina.saleadviser.api.rest.controller;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;

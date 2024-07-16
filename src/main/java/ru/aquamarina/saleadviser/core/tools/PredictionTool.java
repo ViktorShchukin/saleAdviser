@@ -1,8 +1,8 @@
-package ru.aquamarina.saleadviser.service.tool;
+package ru.aquamarina.saleadviser.core.tools;
 
 import org.mapstruct.Mapper;
 import ru.aquamarina.saleadviser.config.AppMapperConfig;
-import ru.aquamarina.saleadviser.model.Prediction;
+import ru.aquamarina.saleadviser.core.model.Prediction;
 
 import java.time.ZonedDateTime;
 import java.util.UUID;

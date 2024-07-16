@@ -1,12 +1,10 @@
-package ru.aquamarina.saleadviser.service.tool;
+package ru.aquamarina.saleadviser.core.tools;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 import ru.aquamarina.saleadviser.config.AppMapperConfig;
-import ru.aquamarina.saleadviser.model.Product;
-
-import java.util.UUID;
+import ru.aquamarina.saleadviser.core.model.Product;
 
 @Mapper(config = AppMapperConfig.class)
 public interface ProductTool {

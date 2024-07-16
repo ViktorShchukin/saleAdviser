@@ -1,10 +1,9 @@
-package ru.aquamarina.saleadviser.calculator;
+package ru.aquamarina.saleadviser.core.calculator;
 
-import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
-import ru.aquamarina.saleadviser.model.Prediction;
-import ru.aquamarina.saleadviser.model.TableFunction;
-import ru.aquamarina.saleadviser.service.tool.PredictionTool;
+import ru.aquamarina.saleadviser.core.model.Prediction;
+import ru.aquamarina.saleadviser.core.model.TableFunction;
+import ru.aquamarina.saleadviser.core.tools.PredictionTool;
 
 import java.time.ZonedDateTime;
 

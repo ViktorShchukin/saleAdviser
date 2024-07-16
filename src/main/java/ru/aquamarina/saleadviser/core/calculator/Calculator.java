@@ -1,6 +1,6 @@
-package ru.aquamarina.saleadviser.calculator;
+package ru.aquamarina.saleadviser.core.calculator;
 
-import ru.aquamarina.saleadviser.model.Prediction;
+import ru.aquamarina.saleadviser.core.model.Prediction;
 
 import java.time.ZonedDateTime;
 

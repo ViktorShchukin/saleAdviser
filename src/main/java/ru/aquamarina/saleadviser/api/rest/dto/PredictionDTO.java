@@ -1,4 +1,4 @@
-package ru.aquamarina.saleadviser.controller.dto;
+package ru.aquamarina.saleadviser.api.rest.dto;
 
 import java.time.ZonedDateTime;
 import java.util.UUID;

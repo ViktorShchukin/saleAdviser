@@ -1,10 +1,10 @@
-package ru.aquamarina.saleadviser.service;
+package ru.aquamarina.saleadviser.core.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import ru.aquamarina.saleadviser.model.Sale;
+import ru.aquamarina.saleadviser.core.model.Sale;
 import ru.aquamarina.saleadviser.repository.SaleRepository;
-import ru.aquamarina.saleadviser.service.tool.SaleTool;
+import ru.aquamarina.saleadviser.core.tools.SaleTool;
 
 import java.io.*;
 import java.util.List;

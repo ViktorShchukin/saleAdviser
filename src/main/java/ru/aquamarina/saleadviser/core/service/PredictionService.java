@@ -1,11 +1,11 @@
-package ru.aquamarina.saleadviser.service;
+package ru.aquamarina.saleadviser.core.service;
 
 import org.springframework.stereotype.Service;
-import ru.aquamarina.saleadviser.calculator.Calculator;
-import ru.aquamarina.saleadviser.calculator.SimpleCalculator;
-import ru.aquamarina.saleadviser.model.Prediction;
-import ru.aquamarina.saleadviser.model.Sale;
-import ru.aquamarina.saleadviser.service.tool.SaleTool;
+import ru.aquamarina.saleadviser.core.calculator.Calculator;
+import ru.aquamarina.saleadviser.core.calculator.SimpleCalculator;
+import ru.aquamarina.saleadviser.core.model.Prediction;
+import ru.aquamarina.saleadviser.core.model.Sale;
+import ru.aquamarina.saleadviser.core.tools.SaleTool;
 
 import java.time.ZonedDateTime;
 import java.util.List;

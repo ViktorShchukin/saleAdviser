@@ -1,16 +1,15 @@
-package ru.aquamarina.saleadviser.service.tool;
+package ru.aquamarina.saleadviser.core.tools;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 import ru.aquamarina.saleadviser.config.AppMapperConfig;
-import ru.aquamarina.saleadviser.model.Sale;
-import ru.aquamarina.saleadviser.model.TableFunction;
+import ru.aquamarina.saleadviser.core.model.Sale;
+import ru.aquamarina.saleadviser.core.model.TableFunction;
 
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;

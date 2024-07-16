@@ -1,4 +1,4 @@
-package ru.aquamarina.saleadviser.model;
+package ru.aquamarina.saleadviser.core.model;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

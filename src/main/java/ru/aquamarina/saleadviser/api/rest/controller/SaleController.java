@@ -1,14 +1,14 @@
-package ru.aquamarina.saleadviser.controller;
+package ru.aquamarina.saleadviser.api.rest.controller;
 
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.lang.NonNull;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import ru.aquamarina.saleadviser.controller.dto.SaleDTO;
-import ru.aquamarina.saleadviser.controller.mappers.SaleMapper;
-import ru.aquamarina.saleadviser.model.Sale;
-import ru.aquamarina.saleadviser.service.SaleService;
+import ru.aquamarina.saleadviser.api.rest.dto.SaleDTO;
+import ru.aquamarina.saleadviser.api.rest.mappers.SaleMapper;
+import ru.aquamarina.saleadviser.core.model.Sale;
+import ru.aquamarina.saleadviser.core.service.SaleService;
 
 import java.io.IOException;
 import java.util.List;

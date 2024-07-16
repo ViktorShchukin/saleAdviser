@@ -1,17 +1,17 @@
-package ru.aquamarina.saleadviser.controller;
+package ru.aquamarina.saleadviser.api.rest.controller;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.lang.NonNull;
 import org.springframework.web.bind.annotation.*;
-import ru.aquamarina.saleadviser.controller.dto.PredictionDTO;
-import ru.aquamarina.saleadviser.controller.dto.ProductDTO;
-import ru.aquamarina.saleadviser.controller.mappers.PredictionMapper;
-import ru.aquamarina.saleadviser.controller.mappers.ProductMapper;
-import ru.aquamarina.saleadviser.model.Prediction;
-import ru.aquamarina.saleadviser.model.Sale;
-import ru.aquamarina.saleadviser.service.PredictionService;
-import ru.aquamarina.saleadviser.service.ProductService;
-import ru.aquamarina.saleadviser.service.SaleService;
+import ru.aquamarina.saleadviser.api.rest.dto.PredictionDTO;
+import ru.aquamarina.saleadviser.api.rest.dto.ProductDTO;
+import ru.aquamarina.saleadviser.api.rest.mappers.PredictionMapper;
+import ru.aquamarina.saleadviser.api.rest.mappers.ProductMapper;
+import ru.aquamarina.saleadviser.core.model.Prediction;
+import ru.aquamarina.saleadviser.core.model.Sale;
+import ru.aquamarina.saleadviser.core.service.PredictionService;
+import ru.aquamarina.saleadviser.core.service.ProductService;
+import ru.aquamarina.saleadviser.core.service.SaleService;
 
 import java.time.ZonedDateTime;
 import java.util.List;

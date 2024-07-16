@@ -1,4 +1,4 @@
-package ru.aquamarina.saleadviser;
+package ru.aquamarina.saleadviser.api.rest;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

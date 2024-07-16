@@ -1,4 +1,4 @@
-package ru.aquamarina.saleadviser.model;
+package ru.aquamarina.saleadviser.core.model;
 
 import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;

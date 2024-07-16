@@ -1,7 +1,7 @@
 package ru.aquamarina.saleadviser.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import ru.aquamarina.saleadviser.model.Sale;
+import ru.aquamarina.saleadviser.core.model.Sale;
 
 import java.util.List;
 import java.util.UUID;

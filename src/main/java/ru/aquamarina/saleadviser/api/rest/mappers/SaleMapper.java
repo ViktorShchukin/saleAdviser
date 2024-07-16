@@ -1,9 +1,9 @@
-package ru.aquamarina.saleadviser.controller.mappers;
+package ru.aquamarina.saleadviser.api.rest.mappers;
 
 import org.mapstruct.Mapper;
+import ru.aquamarina.saleadviser.api.rest.dto.SaleDTO;
 import ru.aquamarina.saleadviser.config.AppMapperConfig;
-import ru.aquamarina.saleadviser.controller.dto.SaleDTO;
-import ru.aquamarina.saleadviser.model.Sale;
+import ru.aquamarina.saleadviser.core.model.Sale;
 
 import java.util.List;
 

@@ -1,4 +1,4 @@
-package ru.aquamarina.saleadviser.core.service;
+package ru.aquamarina.saleadviser.service;
 
 import org.springframework.stereotype.Service;
 import ru.aquamarina.saleadviser.core.calculator.Calculator;

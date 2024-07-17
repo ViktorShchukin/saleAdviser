@@ -8,7 +8,7 @@ import org.springframework.web.multipart.MultipartFile;
 import ru.aquamarina.saleadviser.api.rest.dto.SaleDTO;
 import ru.aquamarina.saleadviser.api.rest.mappers.SaleMapper;
 import ru.aquamarina.saleadviser.core.model.Sale;
-import ru.aquamarina.saleadviser.core.service.SaleService;
+import ru.aquamarina.saleadviser.service.SaleService;
 
 import java.io.IOException;
 import java.util.List;

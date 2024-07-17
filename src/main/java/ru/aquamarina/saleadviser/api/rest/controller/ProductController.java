@@ -9,9 +9,9 @@ import ru.aquamarina.saleadviser.api.rest.mappers.PredictionMapper;
 import ru.aquamarina.saleadviser.api.rest.mappers.ProductMapper;
 import ru.aquamarina.saleadviser.core.model.Prediction;
 import ru.aquamarina.saleadviser.core.model.Sale;
-import ru.aquamarina.saleadviser.core.service.PredictionService;
-import ru.aquamarina.saleadviser.core.service.ProductService;
-import ru.aquamarina.saleadviser.core.service.SaleService;
+import ru.aquamarina.saleadviser.service.PredictionService;
+import ru.aquamarina.saleadviser.service.ProductService;
+import ru.aquamarina.saleadviser.service.SaleService;
 
 import java.time.ZonedDateTime;
 import java.util.List;

@@ -1,4 +1,4 @@
-package ru.aquamarina.saleadviser.core.service;
+package ru.aquamarina.saleadviser.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

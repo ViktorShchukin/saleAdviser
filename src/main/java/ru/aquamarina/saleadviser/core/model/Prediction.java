@@ -15,8 +15,8 @@ import java.util.UUID;
 @NoArgsConstructor
 public class Prediction {
 
-    UUID productId;
-    float value;
-    ZonedDateTime predictionDate; // the target date of prediction
-    ZonedDateTime timestamp; // when prediction was made
+    private UUID productId;
+    private float value;
+    private ZonedDateTime predictionDate; // the target date of prediction
+    private ZonedDateTime timestamp; // when prediction was made
 }

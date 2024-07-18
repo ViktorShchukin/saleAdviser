@@ -16,14 +16,22 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class TableFunctionTest {
 
+    // todo what precision i should use??? read about it
+    private static final float EPS = 0.1F;
+
     @ParameterizedTest
     @MethodSource("testGetValueProducer")
-    void testGetValue(ZonedDateTime input, int expected) {
+    void testGetValue(ZonedDateTime input, float expected) {
         TableFunction tableFunction = prepareTableFunction();
-        int actual = tableFunction.getValue(input);
-        assertEquals(expected, actual);
+        float actual = tableFunction.getValue(input);
+        assertTrue((expected - actual) < EPS);
     }
 
+    /**
+     * stream of data samples TableFunction from this.prepareTableFunction().
+     *
+     * @return stream of Argument.of(input for method, expected returned value)
+     */
     private static Stream<Arguments> testGetValueProducer() {
         return Stream.of(
                 Arguments.of("2000-01-01T00:00:00Z", 0),
@@ -31,7 +39,7 @@ public class TableFunctionTest {
                 Arguments.of("2009-01-01T00:00:00Z", 9),
                 Arguments.of("1000-01-01T00:00:00Z", 0),
                 Arguments.of("3000-01-01T00:00:00Z", 9),
-                Arguments.of("2005-06-01T00:00:00Z", 0)
+                Arguments.of(ZonedDateTime.parse("2005-01-01T00:00:00Z").plusMonths(5), 5.5F)
         );
     }
 

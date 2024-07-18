@@ -23,9 +23,9 @@ public class SimpleCalculator implements Calculator {
     @Override
     public Prediction predict(ZonedDateTime targetDate) {
         ZonedDateTime currentTime = ZonedDateTime.now();
-        int derivative = tableFunction.derivative(targetDate);
-        int lastSaleQuantity = tableFunction.getValue(currentTime);
-        int predictionQuantity = derivative - lastSaleQuantity;
+        float derivative = tableFunction.derivative(targetDate);
+        float lastSaleQuantity = tableFunction.getValue(currentTime);
+        float predictionQuantity = derivative - lastSaleQuantity;
         return predictionTool.create(
                 tableFunction.getProductId(),
                 predictionQuantity,

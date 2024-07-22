@@ -62,6 +62,8 @@ public class ProductController {
     @PutMapping("/{id}")
     public ResponseEntity<ProductDTO> update(@NonNull @PathVariable("id") UUID id,
                                              @NonNull @RequestBody ProductDTO fromUpdate) {
+        // todo maybe use : in assert to provide the message???
+        assert id.equals(fromUpdate.getId());
         return productService
                 .update(id, productMapper.fromDTO(fromUpdate))
                 .map(productMapper::toDTO)

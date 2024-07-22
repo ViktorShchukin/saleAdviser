@@ -52,6 +52,7 @@ public class SaleController {
     @PostMapping("/product/{productId}/sale")
     public ResponseEntity<SaleDTO> create(@NonNull @PathVariable("productId") UUID productId,
                                           @NonNull @RequestBody SaleDTO saleDTO) {
+        assert productId.equals(saleDTO.getProductId());
         Sale saved = saleService.create(saleMapper.fromDTO(saleDTO));
         return ResponseEntity.ok(saleMapper.mapToDTO(saved));
     }
@@ -61,6 +62,8 @@ public class SaleController {
     public ResponseEntity<SaleDTO> update(@NonNull @PathVariable("productId") UUID productId,
                                           @NonNull @PathVariable("id") UUID id,
                                           @NonNull @RequestBody SaleDTO saleDTO) {
+        assert productId.equals(saleDTO.getProductId());
+        assert id.equals(saleDTO.getId());
         return saleService
                 .update(saleMapper.fromDTO(saleDTO))
                 .map(saleMapper::mapToDTO)

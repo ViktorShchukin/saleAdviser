@@ -16,26 +16,32 @@ public class ProductService {
 
     private final ProductRepository productRepository;
     private final ProductTool productTool;
+
     public List<Product> getAll() {
         return productRepository.findAll();
+    }
+
+    public List<Product> getAll(String productName) {
+        if (productName == null) return getAll();
+        return productRepository.findByNameContainingIgnoreCase(productName);
     }
 
     public Optional<Product> getById(UUID id) {
         return productRepository.findById(id);
     }
 
-    public Product save(String name){
+    public Product save(String name) {
         Product newProduct = productTool.create(name);
         return productRepository.save(newProduct);
     }
 
-    public Optional<Product> update(UUID id, Product fromUpdate){
+    public Optional<Product> update(UUID id, Product fromUpdate) {
         return productRepository.findById(id)
                 .map(old -> productTool.update(old, fromUpdate))
                 .map(productRepository::save);
     }
 
-    public void delete(UUID id){
+    public void delete(UUID id) {
         productRepository.deleteById(id);
     }
 

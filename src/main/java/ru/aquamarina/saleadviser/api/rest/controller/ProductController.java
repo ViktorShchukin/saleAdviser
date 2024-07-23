@@ -40,8 +40,8 @@ public class ProductController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ProductDTO>> getAll() {
-        var result = productService.getAll();
+    public ResponseEntity<List<ProductDTO>> getAll(@RequestParam("productName") String productName) {
+        var result = productService.getAll(productName);
         return ResponseEntity.ok(productMapper.toDTO(result));
     }
 

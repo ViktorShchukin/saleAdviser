@@ -9,7 +9,6 @@ import ru.aquamarina.saleadviser.api.rest.dto.ProductDTO;
 import java.util.List;
 import java.util.UUID;
 
-@RestController
 @RequestMapping("/dictionary/group")
 public interface GroupController {
 

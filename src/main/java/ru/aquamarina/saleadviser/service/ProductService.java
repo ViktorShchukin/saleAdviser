@@ -50,4 +50,8 @@ public class ProductService {
                 .map(Product::getId)
                 .orElseGet(() -> save(name).getId());
     }
+
+    public boolean existsById(UUID uuid) {
+        return productRepository.existsById(uuid);
+    }
 }

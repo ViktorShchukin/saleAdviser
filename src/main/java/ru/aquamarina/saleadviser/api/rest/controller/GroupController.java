@@ -4,7 +4,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.lang.NonNull;
 import org.springframework.web.bind.annotation.*;
 import ru.aquamarina.saleadviser.api.rest.dto.GroupDTO;
-import ru.aquamarina.saleadviser.api.rest.dto.ProductDTO;
+import ru.aquamarina.saleadviser.api.rest.dto.GroupRowDTO;
 
 import java.util.List;
 import java.util.UUID;
@@ -29,14 +29,22 @@ public interface GroupController {
     ResponseEntity<?> delete(@NonNull @PathVariable("id") UUID id);
 
     @GetMapping("/{id}/product")
-    ResponseEntity<List<ProductDTO>> getAllProduct(@NonNull @PathVariable("id") UUID id);
+    ResponseEntity<List<GroupRowDTO>> getAllGroupRow(@NonNull @PathVariable("id") UUID id);
 
-    @PostMapping("/{id}/product/{productId}")
-    ResponseEntity<ProductDTO> saveToGroup(@NonNull @PathVariable("id") UUID id,
-                                           @NonNull @PathVariable("productId") UUID productId,
-                                           @NonNull @RequestBody ProductDTO productDTO);
+    @PostMapping("/{id}/product")
+    ResponseEntity<GroupRowDTO> addGroupRow(@NonNull @PathVariable("id") UUID id,
+                                            @NonNull @RequestBody GroupRowDTO groupRowDTO);
+
+    @GetMapping("/{id}/product/{productId}")
+    ResponseEntity<GroupRowDTO> getGroupRow(@NonNull @PathVariable("id") UUID id,
+                                            @NonNull @PathVariable("productId") UUID productId);
+
+    @PutMapping("/{id}/product/{productId}")
+    ResponseEntity<GroupRowDTO> updateGroupRow(@NonNull @PathVariable("id") UUID id,
+                                               @NonNull @PathVariable("productId") UUID productId,
+                                               @NonNull @RequestBody GroupRowDTO groupRowDTO);
 
     @DeleteMapping("/{id}/product/{productId}")
-    ResponseEntity<?> deleteFromGroup(@NonNull @PathVariable("id") UUID id,
-                                      @NonNull @PathVariable("productId") UUID productId);
+    ResponseEntity<?> deleteGroupRow(@NonNull @PathVariable("id") UUID id,
+                                     @NonNull @PathVariable("productId") UUID productId);
 }

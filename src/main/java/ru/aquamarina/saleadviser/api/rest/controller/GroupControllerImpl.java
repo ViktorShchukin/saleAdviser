@@ -2,13 +2,11 @@ package ru.aquamarina.saleadviser.api.rest.controller;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
+import ru.aquamarina.saleadviser.api.rest.dto.GroupAndProductDTO;
 import ru.aquamarina.saleadviser.api.rest.dto.GroupDTO;
-import ru.aquamarina.saleadviser.api.rest.dto.GroupRowDTO;
-import ru.aquamarina.saleadviser.api.rest.dto.ProductDTO;
 import ru.aquamarina.saleadviser.api.rest.mappers.GroupMapper;
 import ru.aquamarina.saleadviser.api.rest.mappers.ProductMapper;
-import ru.aquamarina.saleadviser.core.model.GroupsAndProducts;
-import ru.aquamarina.saleadviser.core.model.Product;
+import ru.aquamarina.saleadviser.core.model.GroupAndProduct;
 import ru.aquamarina.saleadviser.service.GroupService;
 
 import java.util.List;
@@ -65,13 +63,13 @@ public class GroupControllerImpl implements GroupController {
     }
 
     @Override
-    public ResponseEntity<List<GroupRowDTO>> getAllGroupRow(UUID id) {
-        List<GroupsAndProducts> result = groupService.getAllGroupRow(id);
+    public ResponseEntity<List<GroupAndProductDTO>> getAllGroupAndProduct(UUID id) {
+        List<GroupAndProduct> result = groupService.getAllGroupAndProduct(id);
         return ResponseEntity.ok(groupMapper.toDtoGroupRow(result));
     }
 
     @Override
-    public ResponseEntity<GroupRowDTO> addGroupRow(UUID id, GroupRowDTO groupRowDTO) {
+    public ResponseEntity<GroupAndProductDTO> addGroupAndProduct(UUID id, GroupAndProductDTO groupRowDTO) {
         assert id.equals(groupRowDTO.getGroupId());
         assert false;
         var result = groupService.save(groupMapper.fromDto(groupRowDTO));
@@ -79,16 +77,16 @@ public class GroupControllerImpl implements GroupController {
     }
 
     @Override
-    public ResponseEntity<GroupRowDTO> getGroupRow(UUID id, UUID productId) {
+    public ResponseEntity<GroupAndProductDTO> getGroupAndProduct(UUID id, UUID productId) {
         return groupService
-                .getGroupRow(id, productId)
+                .getGroupAndProduct(id, productId)
                 .map(groupMapper::toDto)
                 .map(ResponseEntity::ok)
                 .orElseGet(ResponseEntity.notFound()::build);
     }
 
     @Override
-    public ResponseEntity<GroupRowDTO> updateGroupRow(UUID id, UUID productId, GroupRowDTO groupRowDTO) {
+    public ResponseEntity<GroupAndProductDTO> updateGroupAndProduct(UUID id, UUID productId, GroupAndProductDTO groupRowDTO) {
         assert id.equals(groupRowDTO.getGroupId());
         assert productId.equals(groupRowDTO.getProductId());
         return groupService
@@ -99,8 +97,8 @@ public class GroupControllerImpl implements GroupController {
     }
 
     @Override
-    public ResponseEntity<?> deleteGroupRow(UUID id, UUID productId) {
-        groupService.delete(id, productId);
+    public ResponseEntity<?> deleteGroupAndProduct(UUID id, UUID productId) {
+        groupService.deleteGroupAndProduct(id, productId);
         return ResponseEntity.noContent().build();
     }
 }

@@ -1,13 +1,14 @@
-package ru.aquamarina.saleadviser.core.model;
+package ru.aquamarina.saleadviser.api.rest.dto;
 
-import java.io.Serializable;
 import java.util.UUID;
 
-public class GroupsAndProductsId implements Serializable {
+public class GroupAndProductDTO {
+
     private UUID productId;
     private UUID groupId;
+    private int customValue;
 
-    public GroupsAndProductsId() {
+    public GroupAndProductDTO() {
     }
 
     public UUID getProductId() {
@@ -24,5 +25,13 @@ public class GroupsAndProductsId implements Serializable {
 
     public void setGroupId(UUID groupId) {
         this.groupId = groupId;
+    }
+
+    public int getCustomValue() {
+        return customValue;
+    }
+
+    public void setCustomValue(int customValue) {
+        this.customValue = customValue;
     }
 }

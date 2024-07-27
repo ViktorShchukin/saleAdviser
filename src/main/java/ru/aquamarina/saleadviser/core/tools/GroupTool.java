@@ -5,8 +5,7 @@ import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 import ru.aquamarina.saleadviser.config.AppMapperConfig;
 import ru.aquamarina.saleadviser.core.model.Group;
-import ru.aquamarina.saleadviser.core.model.GroupsAndProducts;
-import ru.aquamarina.saleadviser.core.model.Sale;
+import ru.aquamarina.saleadviser.core.model.GroupAndProduct;
 
 import java.util.UUID;
 
@@ -22,8 +21,8 @@ public interface GroupTool {
     Group update(@MappingTarget Group toUpdate, Group fromUpdate);
 
     @Mapping(target = "customValue", constant = "0")
-    GroupsAndProducts createGroupsAndProductNoValue(UUID groupId, UUID productId);
+    GroupAndProduct createGroupsAndProductNoValue(UUID groupId, UUID productId);
 
     @Mapping(target = "groupId", ignore = true)
-    GroupsAndProducts update(@MappingTarget GroupsAndProducts old, GroupsAndProducts groupsAndProducts);
+    GroupAndProduct update(@MappingTarget GroupAndProduct old, GroupAndProduct groupsAndProducts);
 }

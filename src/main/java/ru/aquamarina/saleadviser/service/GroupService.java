@@ -1,16 +1,13 @@
 package ru.aquamarina.saleadviser.service;
 
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.aquamarina.saleadviser.core.model.Group;
-import ru.aquamarina.saleadviser.core.model.GroupsAndProducts;
-import ru.aquamarina.saleadviser.core.model.Product;
+import ru.aquamarina.saleadviser.core.model.GroupAndProduct;
 import ru.aquamarina.saleadviser.core.tools.GroupTool;
 import ru.aquamarina.saleadviser.repository.GroupRepository;
-import ru.aquamarina.saleadviser.repository.GroupsAndProductsRepository;
+import ru.aquamarina.saleadviser.repository.GroupAndProductRepository;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -20,12 +17,12 @@ import java.util.UUID;
 public class GroupService {
 
     private final GroupRepository groupRepository;
-    private final GroupsAndProductsRepository groupsAndProductsRepository;
+    private final GroupAndProductRepository groupsAndProductsRepository;
     private final GroupTool groupTool;
     private final ProductService productService;
 
     public GroupService(GroupRepository groupRepository,
-                        GroupsAndProductsRepository groupsAndProductsRepository,
+                        GroupAndProductRepository groupsAndProductsRepository,
                         GroupTool groupTool,
                         ProductService productService) {
         this.groupRepository = groupRepository;
@@ -61,28 +58,28 @@ public class GroupService {
         );
     }
 
-    public List<GroupsAndProducts> getAllGroupRow(UUID id) {
+    public List<GroupAndProduct> getAllGroupAndProduct(UUID id) {
         return groupsAndProductsRepository.findAllByGroupId(id);
     }
 
-    public GroupsAndProducts save(GroupsAndProducts groupsAndProducts){
+    public GroupAndProduct save(GroupAndProduct groupsAndProducts){
         assert groupRepository.existsById(groupsAndProducts.getGroupId());
         assert productService.existsById(groupsAndProducts.getProductId());
         return groupsAndProductsRepository.save(groupsAndProducts);
     }
 
-    public Optional<GroupsAndProducts> getGroupRow(UUID id, UUID productId) {
+    public Optional<GroupAndProduct> getGroupAndProduct(UUID id, UUID productId) {
         return groupsAndProductsRepository.findByGroupIdAndProductId(id, productId);
     }
 
-    public Optional<GroupsAndProducts> update(GroupsAndProducts groupsAndProducts) {
+    public Optional<GroupAndProduct> update(GroupAndProduct groupsAndProducts) {
         return groupsAndProductsRepository
                 .findByGroupIdAndProductId(groupsAndProducts.getGroupId(), groupsAndProducts.getProductId())
                 .map(old -> groupTool.update(old, groupsAndProducts))
                 .map(groupsAndProductsRepository::save);
     }
 
-    public void delete(UUID id, UUID productId) {
+    public void deleteGroupAndProduct(UUID id, UUID productId) {
         groupsAndProductsRepository.deleteByGroupIdAndProductId(id, productId);
     }
 }

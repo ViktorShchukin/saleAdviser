@@ -1,17 +1,30 @@
-package ru.aquamarina.saleadviser.api.rest.dto;
+package ru.aquamarina.saleadviser.core.model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 import java.util.UUID;
 
-public class GroupRowDTO {
+@Entity
+@IdClass(GroupAndProductId.class)
+@Table(name = "product_and_groups")
+public class GroupAndProduct {
 
+    @Id
     private UUID productId;
+
+    @Id
     private UUID groupId;
+
+    @Column(name = "custom_value")
     private int customValue;
 
-    public GroupRowDTO() {
+    public GroupAndProduct() {
+    }
+
+    public GroupAndProduct(UUID productId, UUID groupId, int customValue) {
+        this.productId = productId;
+        this.groupId = groupId;
+        this.customValue = customValue;
     }
 
     public UUID getProductId() {

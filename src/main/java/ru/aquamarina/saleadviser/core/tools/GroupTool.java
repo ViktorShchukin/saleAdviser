@@ -6,6 +6,8 @@ import org.mapstruct.MappingTarget;
 import ru.aquamarina.saleadviser.config.AppMapperConfig;
 import ru.aquamarina.saleadviser.core.model.Group;
 import ru.aquamarina.saleadviser.core.model.GroupAndProduct;
+import ru.aquamarina.saleadviser.core.model.GroupRow;
+import ru.aquamarina.saleadviser.core.model.Product;
 
 import java.util.UUID;
 
@@ -25,4 +27,6 @@ public interface GroupTool {
 
     @Mapping(target = "groupId", ignore = true)
     GroupAndProduct update(@MappingTarget GroupAndProduct old, GroupAndProduct groupsAndProducts);
+
+    GroupRow createGroupRow(GroupAndProduct groupAndProduct, Product product);
 }

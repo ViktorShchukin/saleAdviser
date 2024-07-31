@@ -4,10 +4,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.aquamarina.saleadviser.core.model.Group;
 import ru.aquamarina.saleadviser.core.model.GroupAndProduct;
+import ru.aquamarina.saleadviser.core.model.GroupRow;
 import ru.aquamarina.saleadviser.core.tools.GroupTool;
 import ru.aquamarina.saleadviser.repository.GroupRepository;
 import ru.aquamarina.saleadviser.repository.GroupAndProductRepository;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -62,7 +64,7 @@ public class GroupService {
         return groupsAndProductsRepository.findAllByGroupId(id);
     }
 
-    public GroupAndProduct save(GroupAndProduct groupsAndProducts){
+    public GroupAndProduct save(GroupAndProduct groupsAndProducts) {
         assert groupRepository.existsById(groupsAndProducts.getGroupId());
         assert productService.existsById(groupsAndProducts.getProductId());
         return groupsAndProductsRepository.save(groupsAndProducts);
@@ -81,5 +83,26 @@ public class GroupService {
 
     public void deleteGroupAndProduct(UUID id, UUID productId) {
         groupsAndProductsRepository.deleteByGroupIdAndProductId(id, productId);
+    }
+
+    public Optional<GroupRow> getGroupRow(UUID id, UUID productId) {
+        return groupsAndProductsRepository
+                .findByGroupIdAndProductId(id, productId)
+                .flatMap(groupAndProduct -> productService
+                        .getById(productId)
+                        .map(product -> groupTool.createGroupRow(groupAndProduct, product)));
+
+    }
+
+    public List<GroupRow> getAllGroupRow(UUID id) {
+        List<GroupAndProduct> groupAndProductList = groupsAndProductsRepository.findAllByGroupId(id);
+        List<GroupRow> groupRowList = new ArrayList<>();
+        for (GroupAndProduct row : groupAndProductList) {
+            productService
+                    .getById(row.getProductId())
+                    .map(product -> groupTool.createGroupRow(row, product))
+                    .map(groupRowList::add);
+        }
+        return groupRowList;
     }
 }

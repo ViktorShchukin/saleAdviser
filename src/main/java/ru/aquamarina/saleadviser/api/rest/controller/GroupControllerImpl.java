@@ -4,9 +4,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 import ru.aquamarina.saleadviser.api.rest.dto.GroupAndProductDTO;
 import ru.aquamarina.saleadviser.api.rest.dto.GroupDTO;
+import ru.aquamarina.saleadviser.api.rest.dto.GroupRowDTO;
 import ru.aquamarina.saleadviser.api.rest.mappers.GroupMapper;
 import ru.aquamarina.saleadviser.api.rest.mappers.ProductMapper;
 import ru.aquamarina.saleadviser.core.model.GroupAndProduct;
+import ru.aquamarina.saleadviser.core.model.GroupRow;
 import ru.aquamarina.saleadviser.service.GroupService;
 
 import java.util.List;
@@ -65,7 +67,7 @@ public class GroupControllerImpl implements GroupController {
     @Override
     public ResponseEntity<List<GroupAndProductDTO>> getAllGroupAndProduct(UUID id) {
         List<GroupAndProduct> result = groupService.getAllGroupAndProduct(id);
-        return ResponseEntity.ok(groupMapper.toDtoGroupRow(result));
+        return ResponseEntity.ok(groupMapper.toDtoGroupAndProduct(result));
     }
 
     @Override
@@ -100,5 +102,20 @@ public class GroupControllerImpl implements GroupController {
     public ResponseEntity<?> deleteGroupAndProduct(UUID id, UUID productId) {
         groupService.deleteGroupAndProduct(id, productId);
         return ResponseEntity.noContent().build();
+    }
+
+    @Override
+    public ResponseEntity<GroupRowDTO> getGroupRow(UUID id, UUID productId) {
+        return groupService
+                .getGroupRow(id, productId)
+                .map(groupMapper::toDtoGroupRow)
+                .map(ResponseEntity::ok)
+                .orElseGet(ResponseEntity.notFound()::build);
+    }
+
+    @Override
+    public ResponseEntity<List<GroupRowDTO>> getGroupRows(UUID id) {
+        List<GroupRow> groupRows = groupService.getAllGroupRow(id);
+        return ResponseEntity.ok(groupMapper.toDtoGroupRow(groupRows));
     }
 }

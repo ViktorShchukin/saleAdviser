@@ -5,6 +5,7 @@ import org.springframework.lang.NonNull;
 import org.springframework.web.bind.annotation.*;
 import ru.aquamarina.saleadviser.api.rest.dto.GroupAndProductDTO;
 import ru.aquamarina.saleadviser.api.rest.dto.GroupDTO;
+import ru.aquamarina.saleadviser.api.rest.dto.GroupRowDTO;
 
 import java.util.List;
 import java.util.UUID;
@@ -47,4 +48,11 @@ public interface GroupController {
     @DeleteMapping("/{id}/product/{productId}")
     ResponseEntity<?> deleteGroupAndProduct(@NonNull @PathVariable("id") UUID id,
                                             @NonNull @PathVariable("productId") UUID productId);
+
+    @GetMapping("/{id}/product/{productId}/row")
+    ResponseEntity<GroupRowDTO> getGroupRow(@NonNull @PathVariable("id") UUID id,
+                                            @NonNull @PathVariable("productId") UUID productId);
+
+    @GetMapping("/{id}/rows")
+    ResponseEntity<List<GroupRowDTO>> getGroupRows(@NonNull @PathVariable("id") UUID id);
 }

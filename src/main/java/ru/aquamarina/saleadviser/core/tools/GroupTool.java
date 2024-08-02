@@ -4,10 +4,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 import ru.aquamarina.saleadviser.config.AppMapperConfig;
-import ru.aquamarina.saleadviser.core.model.Group;
-import ru.aquamarina.saleadviser.core.model.GroupAndProduct;
-import ru.aquamarina.saleadviser.core.model.GroupRow;
-import ru.aquamarina.saleadviser.core.model.Product;
+import ru.aquamarina.saleadviser.core.model.*;
 
 import java.util.UUID;
 
@@ -29,4 +26,13 @@ public interface GroupTool {
     GroupAndProduct update(@MappingTarget GroupAndProduct old, GroupAndProduct groupsAndProducts);
 
     GroupRow createGroupRow(GroupAndProduct groupAndProduct, Product product);
+
+    GroupRowWithPrediction createGroupRow(GroupRow groupRow, Prediction prediction);
+
+    default String groupRowToCSVString(GroupRowWithPrediction groupRowWithPrediction) {
+        return String.join(";",
+                groupRowWithPrediction.product().getName(),
+                String.valueOf(groupRowWithPrediction.prediction().getValue()),
+                String.valueOf(groupRowWithPrediction.customValue()));
+    }
 }

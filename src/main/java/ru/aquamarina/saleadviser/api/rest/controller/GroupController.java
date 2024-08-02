@@ -1,5 +1,6 @@
 package ru.aquamarina.saleadviser.api.rest.controller;
 
+import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.lang.NonNull;
 import org.springframework.web.bind.annotation.*;
@@ -7,6 +8,9 @@ import ru.aquamarina.saleadviser.api.rest.dto.GroupAndProductDTO;
 import ru.aquamarina.saleadviser.api.rest.dto.GroupDTO;
 import ru.aquamarina.saleadviser.api.rest.dto.GroupRowDTO;
 
+import java.io.File;
+import java.io.InputStream;
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -55,4 +59,9 @@ public interface GroupController {
 
     @GetMapping("/{id}/rows")
     ResponseEntity<List<GroupRowDTO>> getGroupRows(@NonNull @PathVariable("id") UUID id);
+
+    // maybe return InputStreamResource
+    @GetMapping(value = "/{id}/prediction/file/{date}")
+    ResponseEntity<InputStreamResource> getPredictionFile(@NonNull @PathVariable("id") UUID uuid,
+                                                          @NonNull @PathVariable("date") ZonedDateTime dateTime);
 }

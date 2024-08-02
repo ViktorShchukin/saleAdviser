@@ -1,5 +1,6 @@
 package ru.aquamarina.saleadviser.api.rest.controller;
 
+import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 import ru.aquamarina.saleadviser.api.rest.dto.GroupAndProductDTO;
@@ -11,6 +12,11 @@ import ru.aquamarina.saleadviser.core.model.GroupAndProduct;
 import ru.aquamarina.saleadviser.core.model.GroupRow;
 import ru.aquamarina.saleadviser.service.GroupService;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -117,5 +123,20 @@ public class GroupControllerImpl implements GroupController {
     public ResponseEntity<List<GroupRowDTO>> getGroupRows(UUID id) {
         List<GroupRow> groupRows = groupService.getAllGroupRow(id);
         return ResponseEntity.ok(groupMapper.toDtoGroupRow(groupRows));
+    }
+
+    @Override
+    public ResponseEntity<InputStreamResource> getPredictionFile(UUID uuid,
+                                                  ZonedDateTime dateTime) {
+        File res = groupService.getPredictionFile(uuid, dateTime);
+        InputStreamResource stream;
+        try {
+            InputStream inputStream = new FileInputStream(res);
+            stream = new InputStreamResource(inputStream);
+
+        } catch (FileNotFoundException e){
+            throw new RuntimeException(this.getClass().toString() + " in getPredictionFile method" + e.toString());
+        }
+        return ResponseEntity.ok(stream);
     }
 }

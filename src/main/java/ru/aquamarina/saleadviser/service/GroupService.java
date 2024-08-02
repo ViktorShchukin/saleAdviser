@@ -2,13 +2,17 @@ package ru.aquamarina.saleadviser.service;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.aquamarina.saleadviser.core.model.Group;
-import ru.aquamarina.saleadviser.core.model.GroupAndProduct;
-import ru.aquamarina.saleadviser.core.model.GroupRow;
+import ru.aquamarina.saleadviser.core.model.*;
 import ru.aquamarina.saleadviser.core.tools.GroupTool;
 import ru.aquamarina.saleadviser.repository.GroupRepository;
 import ru.aquamarina.saleadviser.repository.GroupAndProductRepository;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.StandardOpenOption;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -18,19 +22,22 @@ import java.util.UUID;
 @Transactional
 public class GroupService {
 
+    private final String FILE_SUFFIX_CSV = ".csv";
     private final GroupRepository groupRepository;
     private final GroupAndProductRepository groupsAndProductsRepository;
     private final GroupTool groupTool;
     private final ProductService productService;
+    private final PredictionService predictionService;
 
     public GroupService(GroupRepository groupRepository,
                         GroupAndProductRepository groupsAndProductsRepository,
                         GroupTool groupTool,
-                        ProductService productService) {
+                        ProductService productService, PredictionService predictionService) {
         this.groupRepository = groupRepository;
         this.groupsAndProductsRepository = groupsAndProductsRepository;
         this.groupTool = groupTool;
         this.productService = productService;
+        this.predictionService = predictionService;
     }
 
     public List<Group> getAll() {
@@ -104,5 +111,33 @@ public class GroupService {
                     .map(groupRowList::add);
         }
         return groupRowList;
+    }
+
+    // todo end this
+    public File getPredictionFile(UUID uuid, ZonedDateTime dateTime) {
+        List<GroupRow> groupRowList = getAllGroupRow(uuid);
+        List<GroupRowWithPrediction> groupRowWithPredictionList = groupRowList
+                .stream()
+                .map(groupRow -> {
+                    Prediction res = predictionService.get(groupRow.product().getId(), dateTime);
+                    return groupTool.createGroupRow(groupRow, res);
+                })
+                .toList();
+        try {
+            String file_prefix = ZonedDateTime.now().toString() + "-predictions-";
+            File tmpFile = File.createTempFile(file_prefix, FILE_SUFFIX_CSV);
+            try (BufferedWriter wr = Files.newBufferedWriter(tmpFile.toPath(), StandardOpenOption.WRITE)) {
+                wr.write("name;prediction;custom value");
+                for (GroupRowWithPrediction groupRowWithPrediction : groupRowWithPredictionList) {
+                    wr.newLine();
+                    String s = groupTool.groupRowToCSVString(groupRowWithPrediction);
+                    wr.write(s);
+                }
+            }
+            return tmpFile;
+        } catch (IOException e) {
+            // todo handle this in other way, i am not really excited about exception. used it only because have no good thought option for now
+            throw new RuntimeException(this.getClass().toString() + " IO in getPredictionFile method");
+        }
     }
 }

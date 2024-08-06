@@ -17,6 +17,7 @@
 		<java.version>22</java.version>
 		<org.mapstruct.version>1.5.5.Final</org.mapstruct.version>
 		<lombok.version>1.18.32</lombok.version>
+		<flyway.version>10.17.0</flyway.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -55,7 +56,18 @@
             <version>17.0.0</version>
             <scope>compile</scope>
         </dependency>
-    </dependencies>
+		<dependency>
+			<groupId>org.flywaydb</groupId>
+			<artifactId>flyway-core</artifactId>
+			<version>${flyway.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.flywaydb</groupId>
+			<artifactId>flyway-database-postgresql</artifactId>
+			<version>${flyway.version}</version>
+		</dependency>
+
+	</dependencies>
 
 	<build>
 		<plugins>
@@ -90,6 +102,24 @@
 				<artifactId>maven-surefire-plugin</artifactId>
 				<version>2.19.1</version>
 			</plugin>
+<!--			<plugin>-->
+<!--				<groupId>org.flywaydb</groupId>-->
+<!--				<artifactId>flyway-maven-plugin</artifactId>-->
+<!--				<version>${flyway.version}</version>-->
+<!--				<configuration>-->
+<!--					<url>jdbc:postgresql://localhost:5432/sale_adviser</url>-->
+<!--					<user>anorisno</user>-->
+<!--					<password>GYAGG</password>-->
+<!--					<schemas>test</schemas>-->
+<!--				</configuration>-->
+<!--				<dependencies>-->
+<!--					<dependency>-->
+<!--						<groupId>org.flywaydb</groupId>-->
+<!--						<artifactId>flyway-database-postgresql</artifactId>-->
+<!--						<version>${flyway.version}</version>-->
+<!--					</dependency>-->
+<!--				</dependencies>-->
+<!--			</plugin>-->
 		</plugins>
 	</build>
 

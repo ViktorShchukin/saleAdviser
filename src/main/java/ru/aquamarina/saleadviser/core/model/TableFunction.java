@@ -46,10 +46,7 @@ public class TableFunction {
         this.productId = productId;
     }
 
-    // todo maybe should return optional and if given argument is out of range return optional.empty??
     // todo maybe simplify
-    // todo. not all case are checked. it should return zero at all
-    // todo think about long and float. Where i should cast them????
     /**
      * if this function doesn't contain a passed argument it will be interpolated
      * if the passed argument is less or greater than min or max, return min or max of the function

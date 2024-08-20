@@ -19,7 +19,6 @@ public class SimpleCalculator implements Calculator {
         this.tableFunction = tableFunction;
     }
 
-    // todo use mapstruct for all object creation. not like here with prediction
     @Override
     public Prediction predict(ZonedDateTime targetDate) {
         ZonedDateTime currentTime = ZonedDateTime.now();

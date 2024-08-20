@@ -49,11 +49,9 @@ public class SaleService {
         saleRepository.deleteById(id);
     }
 
-    // todo end this
-    // todo should i close stream
-    // todo accept ImputStream and then BufferedReader(ImputStream) and then process
     // todo it should be outside my core logic. Maybe in api.rest
     // todo make it like in ppudgy project with consumer and validation of parsed string
+    // todo make save batch
     public void handleFileWithSales(InputStream stream) throws IOException {
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(stream))) {
             String line = null;
@@ -62,24 +60,10 @@ public class SaleService {
                 saleRepository.save(sale);
             }
         } catch (IOException e) {
+            // todo log this instead of system.err
             System.err.format("IOException with sales file in saleService: %s%n", e);
         }
 
-    }
-
-
-    // no need to this. but I can't delete it
-    private String readLine(Reader reader) throws IOException {
-        int ch;
-        StringBuilder stringBuilder = new StringBuilder();
-        while ((ch = reader.read()) != '\n') {
-            stringBuilder.append(ch);
-        }
-        if (!stringBuilder.isEmpty()) {
-            return stringBuilder.toString();
-        } else {
-            return null;
-        }
     }
 
     private Sale parseLine(String string) {

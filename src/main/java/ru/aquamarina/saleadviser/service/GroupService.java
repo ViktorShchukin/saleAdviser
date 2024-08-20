@@ -113,7 +113,6 @@ public class GroupService {
         return groupRowList;
     }
 
-    // todo end this
     public File getPredictionFile(UUID uuid, ZonedDateTime dateTime) {
         List<GroupRow> groupRowList = getAllGroupRow(uuid);
         List<GroupRowWithPrediction> groupRowWithPredictionList = groupRowList

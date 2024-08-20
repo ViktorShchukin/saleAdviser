@@ -47,8 +47,6 @@ public class SaleController {
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    // todo check if product id from path and body are the same
-    // todo for all methods and for product too
     @PostMapping("/product/{productId}/sale")
     public ResponseEntity<SaleDTO> create(@NonNull @PathVariable("productId") UUID productId,
                                           @NonNull @RequestBody SaleDTO saleDTO) {
@@ -57,7 +55,6 @@ public class SaleController {
         return ResponseEntity.ok(saleMapper.mapToDTO(saved));
     }
 
-    // todo crate validation fo id and productId from route and object. mayge use assert and id.equals
     @PutMapping("/product/{productId}/sale/{id}")
     public ResponseEntity<SaleDTO> update(@NonNull @PathVariable("productId") UUID productId,
                                           @NonNull @PathVariable("id") UUID id,
@@ -71,7 +68,6 @@ public class SaleController {
                 .orElseGet(ResponseEntity.notFound()::build);
     }
 
-    // todo should i check does this entity exist???
     @DeleteMapping("/product/{productId}/sale/{id}")
     public ResponseEntity<?> delete(@NonNull @PathVariable("productId") UUID productId,
                                     @NonNull @PathVariable("id") UUID id) {
@@ -84,7 +80,6 @@ public class SaleController {
     public ResponseEntity<?> uploadFileWithSale(@RequestParam("file") MultipartFile file) {
         try {
             saleService.handleFileWithSales(file.getInputStream());
-            // todo is this right?? I mean return
             return ResponseEntity.ok().build();
         } catch (IOException e) {
             // todo maybe send the message???

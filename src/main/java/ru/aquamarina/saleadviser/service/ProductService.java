@@ -2,6 +2,7 @@ package ru.aquamarina.saleadviser.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.aquamarina.saleadviser.core.model.Product;
 import ru.aquamarina.saleadviser.repository.ProductRepository;
 import ru.aquamarina.saleadviser.core.tools.ProductTool;
@@ -35,6 +36,7 @@ public class ProductService {
         return productRepository.save(newProduct);
     }
 
+    @Transactional
     public Optional<Product> update(UUID id, Product fromUpdate) {
         return productRepository.findById(id)
                 .map(old -> productTool.update(old, fromUpdate))
@@ -45,6 +47,7 @@ public class ProductService {
         productRepository.deleteById(id);
     }
 
+    @Transactional
     public UUID getIdByNameOrSave(String name) {
         return productRepository.findByName(name)
                 .map(Product::getId)

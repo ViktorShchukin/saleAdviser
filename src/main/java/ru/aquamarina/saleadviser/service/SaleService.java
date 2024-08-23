@@ -2,6 +2,7 @@ package ru.aquamarina.saleadviser.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.aquamarina.saleadviser.core.model.Sale;
 import ru.aquamarina.saleadviser.repository.SaleRepository;
 import ru.aquamarina.saleadviser.core.tools.SaleTool;
@@ -27,7 +28,6 @@ public class SaleService {
         return saleRepository.findById(uuid);
     }
 
-    // todo make all transactional
     // todo find out if i can return optional
     public Sale create(Sale sale) {
         Sale newSale = saleTool.create(
@@ -39,6 +39,7 @@ public class SaleService {
         return saleRepository.save(newSale);
     }
 
+    @Transactional
     public Optional<Sale> update(Sale sale) {
         return saleRepository.findById(sale.getId())
                 .map(old -> saleTool.update(old, sale))
@@ -52,6 +53,7 @@ public class SaleService {
     // todo it should be outside my core logic. Maybe in api.rest
     // todo make it like in ppudgy project with consumer and validation of parsed string
     // todo make save batch
+    @Transactional
     public void handleFileWithSales(InputStream stream) throws IOException {
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(stream))) {
             String line = null;

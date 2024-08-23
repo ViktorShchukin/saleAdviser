@@ -19,7 +19,6 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Service
-@Transactional
 public class GroupService {
 
     private final String FILE_SUFFIX_CSV = ".csv";
@@ -53,6 +52,7 @@ public class GroupService {
         return groupRepository.save(newGroup);
     }
 
+    @Transactional
     public Optional<Group> update(Group group) {
         return groupRepository
                 .findById(group.getId())
@@ -60,6 +60,7 @@ public class GroupService {
                 .map(groupRepository::save);
     }
 
+    @Transactional
     public void delete(UUID id) {
         groupsAndProductsRepository.deleteAllByGroupId(id);
         groupRepository.deleteById(
@@ -71,6 +72,7 @@ public class GroupService {
         return groupsAndProductsRepository.findAllByGroupId(id);
     }
 
+    @Transactional
     public GroupAndProduct save(GroupAndProduct groupsAndProducts) {
         assert groupRepository.existsById(groupsAndProducts.getGroupId());
         assert productService.existsById(groupsAndProducts.getProductId());
@@ -81,6 +83,7 @@ public class GroupService {
         return groupsAndProductsRepository.findByGroupIdAndProductId(id, productId);
     }
 
+    @Transactional
     public Optional<GroupAndProduct> update(GroupAndProduct groupsAndProducts) {
         return groupsAndProductsRepository
                 .findByGroupIdAndProductId(groupsAndProducts.getGroupId(), groupsAndProducts.getProductId())
@@ -92,6 +95,7 @@ public class GroupService {
         groupsAndProductsRepository.deleteByGroupIdAndProductId(id, productId);
     }
 
+    @Transactional
     public Optional<GroupRow> getGroupRow(UUID id, UUID productId) {
         return groupsAndProductsRepository
                 .findByGroupIdAndProductId(id, productId)
@@ -101,6 +105,7 @@ public class GroupService {
 
     }
 
+    @Transactional
     public List<GroupRow> getAllGroupRow(UUID id) {
         List<GroupAndProduct> groupAndProductList = groupsAndProductsRepository.findAllByGroupId(id);
         List<GroupRow> groupRowList = new ArrayList<>();
@@ -113,6 +118,7 @@ public class GroupService {
         return groupRowList;
     }
 
+    @Transactional
     public File getPredictionFile(UUID uuid, ZonedDateTime dateTime) {
         List<GroupRow> groupRowList = getAllGroupRow(uuid);
         List<GroupRowWithPrediction> groupRowWithPredictionList = groupRowList

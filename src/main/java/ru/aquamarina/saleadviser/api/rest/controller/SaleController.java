@@ -1,6 +1,8 @@
 package ru.aquamarina.saleadviser.api.rest.controller;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatusCode;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.lang.NonNull;
 import org.springframework.web.bind.annotation.*;
@@ -11,6 +13,7 @@ import ru.aquamarina.saleadviser.core.model.Sale;
 import ru.aquamarina.saleadviser.service.SaleService;
 
 import java.io.IOException;
+import java.nio.charset.Charset;
 import java.util.List;
 import java.util.UUID;
 
@@ -20,13 +23,14 @@ import java.util.UUID;
 @RequestMapping("/dictionary")
 public class SaleController {
 
-    // todo make it final
-    private SaleMapper saleMapper;
-    private SaleService saleService;
+    private final SaleMapper saleMapper;
+    private final SaleService saleService;
+    private final Charset defaultCharset;
 
-    public SaleController(SaleMapper saleMapper, SaleService saleService) {
+    public SaleController(SaleMapper saleMapper, SaleService saleService, Charset defaultCharset) {
         this.saleMapper = saleMapper;
         this.saleService = saleService;
+        this.defaultCharset = defaultCharset;
     }
 
     // todo make it Pageable
@@ -79,7 +83,10 @@ public class SaleController {
     @PostMapping("/sale/file/upload")
     public ResponseEntity<?> uploadFileWithSale(@RequestParam("file") MultipartFile file) {
         try {
-            saleService.handleFileWithSales(file.getInputStream());
+            String contentType = file.getContentType();
+            MediaType mediaType = MediaType.parseMediaType(contentType);
+            Charset charset = mediaType.getCharset();
+            saleService.handleFileWithSales(file.getInputStream(), charset != null ? charset : defaultCharset);
             return ResponseEntity.ok().build();
         } catch (IOException e) {
             // todo maybe send the message???

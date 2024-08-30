@@ -1,6 +1,7 @@
 package ru.aquamarina.saleadviser.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.aquamarina.saleadviser.core.model.Sale;
@@ -8,6 +9,7 @@ import ru.aquamarina.saleadviser.repository.SaleRepository;
 import ru.aquamarina.saleadviser.core.tools.SaleTool;
 
 import java.io.*;
+import java.nio.charset.Charset;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -54,8 +56,8 @@ public class SaleService {
     // todo make it like in ppudgy project with consumer and validation of parsed string
     // todo make save batch
     @Transactional
-    public void handleFileWithSales(InputStream stream) throws IOException {
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(stream))) {
+    public void handleFileWithSales(InputStream stream, Charset charset) throws IOException {
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(stream, charset))) {
             String line = null;
             while ((line = reader.readLine()) != null) {
                 Sale sale = parseLine(line);

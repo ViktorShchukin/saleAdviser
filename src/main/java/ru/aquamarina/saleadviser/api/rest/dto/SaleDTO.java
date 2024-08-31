@@ -1,6 +1,5 @@
 package ru.aquamarina.saleadviser.api.rest.dto;
 
-import jakarta.persistence.Column;
 import lombok.Data;
 
 import java.time.ZonedDateTime;
@@ -15,7 +14,7 @@ public class SaleDTO {
 
     private int quantity;
 
-    private float totalSum;
+    private float cost;
 
     private ZonedDateTime saleDate;
 }

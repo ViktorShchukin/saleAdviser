@@ -1,7 +1,6 @@
 package ru.aquamarina.saleadviser.service;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.aquamarina.saleadviser.core.model.Sale;
@@ -36,7 +35,7 @@ public class SaleService {
                 sale.getId(),
                 sale.getProductId(),
                 sale.getQuantity(),
-                sale.getTotalSum(),
+                sale.getCost(),
                 sale.getSaleDate());
         return saleRepository.save(newSale);
     }

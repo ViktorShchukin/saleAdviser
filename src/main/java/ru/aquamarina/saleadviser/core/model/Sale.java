@@ -27,8 +27,8 @@ public class Sale {
     @Column(name = "quantity")
     private int quantity;
 
-    @Column(name = "total_sum")
-    private float totalSum;
+    @Column(name = "cost")
+    private float cost;
 
     @Column(name = "sale_date")
     private ZonedDateTime saleDate;

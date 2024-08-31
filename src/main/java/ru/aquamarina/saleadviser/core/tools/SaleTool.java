@@ -21,13 +21,13 @@ public interface SaleTool {
     Sale create(UUID id,
                 UUID productId,
                 int quantity,
-                float totalSum,
+                float cost,
                 ZonedDateTime saleDate);
 
     @Mapping(target = "id", expression = "java(java.util.UUID.randomUUID())")
     Sale create(UUID productId,
                 String quantity,
-                String totalSum,
+                String cost,
                 String saleDate);
 
     @Mapping(target = "id", ignore = true)

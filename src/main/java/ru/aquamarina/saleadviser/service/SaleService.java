@@ -1,6 +1,9 @@
 package ru.aquamarina.saleadviser.service;
 
 import lombok.RequiredArgsConstructor;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.aquamarina.saleadviser.core.model.Sale;
@@ -16,6 +19,8 @@ import java.util.UUID;
 @RequiredArgsConstructor
 @Service
 public class SaleService {
+
+    private final Logger log = LoggerFactory.getLogger(SaleService.class);
 
     private final SaleRepository saleRepository;
     private final SaleTool saleTool;
@@ -60,11 +65,14 @@ public class SaleService {
             String line = null;
             while ((line = reader.readLine()) != null) {
                 Sale sale = parseLine(line);
-                saleRepository.save(sale);
+                if (!saleRepository.existsByProductIdAndSaleDateAndCost(sale.getProductId(), sale.getSaleDate(), sale.getCost())){
+                    saleRepository.save(sale);
+                } else {
+                    log.error("this row already exist: " + sale);
+                }
             }
         } catch (IOException e) {
-            // todo log this instead of system.err
-            System.err.format("IOException with sales file in saleService: %s%n", e);
+            log.error("IOException with sales file in saleService: %s%n", e);
         }
 
     }

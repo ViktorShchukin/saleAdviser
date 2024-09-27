@@ -5,6 +5,7 @@ import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 import ru.aquamarina.saleadviser.config.AppMapperConfig;
 import ru.aquamarina.saleadviser.core.model.Sale;
+import ru.aquamarina.saleadviser.core.model.SaleInterface;
 import ru.aquamarina.saleadviser.core.model.TableFunction;
 
 import java.time.ZoneId;
@@ -22,13 +23,13 @@ public interface SaleTool {
                 UUID productId,
                 int quantity,
                 float cost,
-                ZonedDateTime saleDate);
+                ZonedDateTime date);
 
     @Mapping(target = "id", expression = "java(java.util.UUID.randomUUID())")
     Sale create(UUID productId,
                 String quantity,
                 String cost,
-                String saleDate);
+                String date);
 
     @Mapping(target = "id", ignore = true)
     Sale update(@MappingTarget Sale toUpdate, Sale fromUpdate);
@@ -56,7 +57,7 @@ public interface SaleTool {
     }
 
     // todo make shure that saleList is not nulll
-    default TableFunction toTableFunction(List<Sale> saleList) {
+    default TableFunction toTableFunction(List<? extends SaleInterface> saleList) {
         TableFunction function = new TableFunction();
         // todo is it normal?? about how i get product id???
         function.setProductId(saleList.get(0).getProductId());
@@ -66,18 +67,18 @@ public interface SaleTool {
     }
 
     // todo write test for this.
-    default List<ZonedDateTime> toListDateTime(List<Sale> saleList) {
+    default List<ZonedDateTime> toListDateTime(List<? extends SaleInterface> saleList) {
         List<ZonedDateTime> dateList = new ArrayList<ZonedDateTime>();
         int i = 0;
         while (i < saleList.size()) {
-            dateList.add(saleList.get(i).getSaleDate());
+            dateList.add(saleList.get(i).getDate());
             i++;
         }
         return dateList;
     }
 
     // todo write test for this
-    default int[] toListQuantity(List<Sale> saleList) {
+    default int[] toListQuantity(List<? extends SaleInterface> saleList) {
         int[] quantityList = new int[saleList.size()];
         int i = 0;
         while (i < saleList.size()) {

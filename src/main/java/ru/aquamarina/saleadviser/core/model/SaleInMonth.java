@@ -14,12 +14,13 @@ import java.util.UUID;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "sale")
+@Table(name = "sales_in_month_new")
 @Entity
-public class Sale implements SaleInterface {
+public class SaleInMonth implements SaleInterface {
 
     @Id
-    private UUID id;
+    @Column(name = "id")
+    private long id;
 
     @Column(name = "product_id")
     private UUID productId;
@@ -27,9 +28,6 @@ public class Sale implements SaleInterface {
     @Column(name = "quantity")
     private int quantity;
 
-    @Column(name = "cost")
-    private float cost;
-
-    @Column(name = "sale_date")
+    @Column(name = "date_m")
     private ZonedDateTime date;
 }

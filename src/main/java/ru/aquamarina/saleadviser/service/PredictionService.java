@@ -2,7 +2,7 @@ package ru.aquamarina.saleadviser.service;
 
 import org.springframework.stereotype.Service;
 import ru.aquamarina.saleadviser.core.calculator.Calculator;
-import ru.aquamarina.saleadviser.core.calculator.SimpleCalculator;
+import ru.aquamarina.saleadviser.core.calculator.CalculatorFactory;
 import ru.aquamarina.saleadviser.core.model.*;
 import ru.aquamarina.saleadviser.core.tools.SaleTool;
 
@@ -15,19 +15,24 @@ public class PredictionService {
 
     private final SaleTool saleTool;
     private final SaleService saleService;
+    private final CalculatorFactory calculatorFactory;
 
-    public PredictionService(SaleTool saleTool, SaleService saleService) {
+    public PredictionService(SaleTool saleTool, SaleService saleService, CalculatorFactory calculatorFactory) {
         this.saleTool = saleTool;
         this.saleService = saleService;
+        this.calculatorFactory = calculatorFactory;
     }
 
-    public Prediction get(List<Sale> saleList, ZonedDateTime targetDate) {
-        Calculator calculator = new SimpleCalculator(saleTool.toTableFunction(saleList));
+    public Prediction getPrediction(UUID productId, ZonedDateTime targetDate) {
+        List<SaleInMonth> saleList = saleService.getAllSaleInMonthByProductId(productId);
+        TableFunction tableFunction = saleTool.toTableFunction(saleList);
+        return getPrediction(tableFunction, targetDate);
+    }
+
+    private Prediction getPrediction(TableFunction tableFunction, ZonedDateTime targetDate) {
+        Calculator calculator = calculatorFactory.getCalculator(tableFunction);
         return calculator.predict(targetDate);
     }
 
-    public Prediction get(UUID productId, ZonedDateTime targetDate) {
-        List<Sale> saleList = saleService.getAllByProductId(productId);
-        return get(saleList, targetDate);
-    }
+
 }

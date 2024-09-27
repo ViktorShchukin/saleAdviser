@@ -80,8 +80,7 @@ public class ProductController {
     @GetMapping("/{id}/prediction/{date}")
     public ResponseEntity<PredictionDTO> getPrediction(@NonNull @PathVariable("id") UUID id,
                                                        @NonNull @PathVariable("date") ZonedDateTime targetDate) {
-        List<Sale> saleList = saleService.getAllByProductId(id);
-        Prediction prediction = predictionService.get(saleList, targetDate);
+        Prediction prediction = predictionService.getPrediction(id, targetDate);
         return ResponseEntity.ok(predictionMapper.toDto(prediction));
     }
 }

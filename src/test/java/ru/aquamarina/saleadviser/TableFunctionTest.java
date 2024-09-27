@@ -24,8 +24,29 @@ public class TableFunctionTest {
     void testGetValue(ZonedDateTime input, float expected) {
         TableFunction tableFunction = prepareTableFunction();
         float actual = tableFunction.getValue(input);
-        assertTrue((expected - actual) < EPS);
+        double abs = Math.abs(expected - actual);
+        assertTrue(abs < EPS);
     }
+
+    @ParameterizedTest
+    @MethodSource("testGetValueAmountProducer")
+    void testGetValueAmount(ZonedDateTime from, ZonedDateTime to, float expected) {
+        TableFunction tableFunction = prepareTableFunction();
+        double actual = tableFunction.getValueAmount(from, to);
+        double abs = Math.abs(expected - actual);
+        assertTrue(abs < EPS);
+    }
+
+    @Test
+    void testConstructor() {
+        int[] quantity = new int[]{1,1,1};
+        List<ZonedDateTime> dateTimeList = List.of(ZonedDateTime.now(), ZonedDateTime.now());
+        assertThrows(IllegalArgumentException.class,
+                () -> new TableFunction(UUID.fromString("00000000-0000-0000-0000-000000000000"), quantity, dateTimeList));
+    }
+
+
+    // -------------------------- Helper methods ------------------ //
 
     /**
      * stream of data samples TableFunction from this.prepareTableFunction().
@@ -39,7 +60,23 @@ public class TableFunctionTest {
                 Arguments.of("2009-01-01T00:00:00Z", 9),
                 Arguments.of("1000-01-01T00:00:00Z", 0),
                 Arguments.of("3000-01-01T00:00:00Z", 9),
+                Arguments.of("2005-06-01T00:00:00Z", 5.5F),
                 Arguments.of(ZonedDateTime.parse("2005-01-01T00:00:00Z").plusMonths(5), 5.5F)
+        );
+    }
+
+    private static Stream<Arguments> testGetValueAmountProducer() {
+        return Stream.of(
+                Arguments.of("1990-01-01T00:00:00Z", "1999-01-01T00:00:00Z", 0),
+                Arguments.of("1999-01-01T00:00:00Z", "2000-01-01T00:00:00Z", 0),
+                Arguments.of("1999-01-01T00:00:00Z", "2003-03-03T00:00:00Z", 6),
+                Arguments.of("2000-01-01T00:00:00Z", "2003-03-03T00:00:00Z", 6),
+                Arguments.of("2001-02-01T00:00:00Z", "2003-03-03T00:00:00Z", 5),
+                Arguments.of("2008-02-01T00:00:00Z", "2009-01-01T00:00:00Z", 9),
+                Arguments.of("2006-03-01T00:00:00Z", "2020-03-01T00:00:00Z", 24),
+                Arguments.of("2009-01-01T00:00:00Z", "2020-03-03T00:00:00Z", 9),
+                Arguments.of("3000-01-01T00:00:00Z", "4000-01-01T00:00:00Z", 0),
+                Arguments.of("1990-01-01T00:00:00Z", "3000-01-01T00:00:00Z", 45)
         );
     }
 

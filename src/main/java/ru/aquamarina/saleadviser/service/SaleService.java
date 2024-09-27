@@ -7,6 +7,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.aquamarina.saleadviser.core.model.Sale;
+import ru.aquamarina.saleadviser.core.model.SaleInMonth;
+import ru.aquamarina.saleadviser.repository.SaleInMonthRepository;
 import ru.aquamarina.saleadviser.repository.SaleRepository;
 import ru.aquamarina.saleadviser.core.tools.SaleTool;
 
@@ -20,11 +22,20 @@ import java.util.UUID;
 @Service
 public class SaleService {
 
+//    private final EntityManager entityManager;
+//    private final static String query = "select sd.product_id, sd.quantity, sd.date_t from\n" +
+//            "                (select s.product_id, sum(quantity) as quantity , date_trunc('month',  sale_date) as date_t\n" +
+//            "                      from sale s\n" +
+//            "                      where product_id = ?\n" +
+//            "                      group by date_t, s.product_id\n" +
+//            "                      order by date_t) sd ;\n";
+
     private final Logger log = LoggerFactory.getLogger(SaleService.class);
 
     private final SaleRepository saleRepository;
     private final SaleTool saleTool;
     private final ProductService productService;
+    private final SaleInMonthRepository saleInMonthRepository;
 
     public List<Sale> getAllByProductId(UUID productId) {
         return saleRepository.findAllByProductId(productId);
@@ -41,7 +52,7 @@ public class SaleService {
                 sale.getProductId(),
                 sale.getQuantity(),
                 sale.getCost(),
-                sale.getSaleDate());
+                sale.getDate());
         return saleRepository.save(newSale);
     }
 
@@ -65,7 +76,7 @@ public class SaleService {
             String line = null;
             while ((line = reader.readLine()) != null) {
                 Sale sale = parseLine(line);
-                if (!saleRepository.existsByProductIdAndSaleDateAndCost(sale.getProductId(), sale.getSaleDate(), sale.getCost())){
+                if (!saleRepository.existsByProductIdAndDateAndCost(sale.getProductId(), sale.getDate(), sale.getCost())) {
                     saleRepository.save(sale);
                 } else {
                     log.error("this row already exist: " + sale);
@@ -83,4 +94,11 @@ public class SaleService {
         UUID productId = productService.getIdByNameOrSave(splitRes[0]);
         return saleTool.create(productId, splitRes[2], splitRes[3], splitRes[1]);
     }
+
+    //// SaleInMonth
+
+    public List<SaleInMonth> getAllSaleInMonthByProductId(UUID productId) {
+        return saleInMonthRepository.findAllByProductId(productId);
+    }
+
 }

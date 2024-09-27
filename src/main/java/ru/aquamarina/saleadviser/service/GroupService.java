@@ -91,6 +91,7 @@ public class GroupService {
                 .map(groupsAndProductsRepository::save);
     }
 
+    @Transactional
     public void deleteGroupAndProduct(UUID id, UUID productId) {
         groupsAndProductsRepository.deleteByGroupIdAndProductId(id, productId);
     }
@@ -124,7 +125,7 @@ public class GroupService {
         List<GroupRowWithPrediction> groupRowWithPredictionList = groupRowList
                 .stream()
                 .map(groupRow -> {
-                    Prediction res = predictionService.get(groupRow.product().getId(), dateTime);
+                    Prediction res = predictionService.getPrediction(groupRow.product().getId(), dateTime);
                     return groupTool.createGroupRow(groupRow, res);
                 })
                 .toList();

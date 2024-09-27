@@ -3,8 +3,11 @@ package ru.aquamarina.saleadviser.core.model;
 import java.time.Duration;
 import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 // todo try to simplify methods. It seem that some constructions are ugly
 public class TableFunction {
@@ -17,6 +20,10 @@ public class TableFunction {
     }
 
     public TableFunction(UUID productId, int[] quantity, List<ZonedDateTime> listDate) {
+        boolean check = quantity.length == listDate.size();
+        if (!check){
+            throw new IllegalArgumentException("size of quantity list is not match the size of date list");
+        }
         this.productId = productId;
         this.listQuantity = quantity;
         this.listDate = listDate;
@@ -47,6 +54,7 @@ public class TableFunction {
     }
 
     // todo maybe simplify
+
     /**
      * if this function doesn't contain a passed argument it will be interpolated
      * if the passed argument is less or greater than min or max, return min or max of the function
@@ -74,6 +82,14 @@ public class TableFunction {
             }
         }
         return 0;
+    }
+
+    public double getValueAmount(ZonedDateTime from, ZonedDateTime to) {
+        return listDate.stream()
+                .filter(dateTime -> dateTime.isAfter(from) | dateTime.isEqual(from))
+                .filter(dateTime -> dateTime.isBefore(to) | dateTime.isEqual(to))
+                .mapToDouble(this::getValue)
+                .sum();
     }
 
     // todo maybe simplify

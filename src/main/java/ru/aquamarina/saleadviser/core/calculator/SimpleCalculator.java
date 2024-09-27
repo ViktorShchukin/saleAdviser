@@ -12,9 +12,6 @@ public class SimpleCalculator implements Calculator {
     private TableFunction tableFunction;
     private final PredictionTool predictionTool = Mappers.getMapper(PredictionTool.class);
 
-    public SimpleCalculator() {
-    }
-
     public SimpleCalculator(TableFunction tableFunction) {
         this.tableFunction = tableFunction;
     }

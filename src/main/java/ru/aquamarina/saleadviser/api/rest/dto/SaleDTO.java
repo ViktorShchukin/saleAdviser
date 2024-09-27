@@ -16,5 +16,5 @@ public class SaleDTO {
 
     private float cost;
 
-    private ZonedDateTime saleDate;
+    private ZonedDateTime date;
 }

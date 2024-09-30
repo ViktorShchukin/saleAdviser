@@ -90,7 +90,7 @@ public class SaleService {
 
     private Sale parseLine(String string) {
         // todo it's not save. I can't be sure that string contains required parts
-        String[] splitRes = string.split(";");
+        String[] splitRes = saleTool.validateCsvFileString(string);
         UUID productId = productService.getIdByNameOrSave(splitRes[0]);
         return saleTool.create(productId, splitRes[2], splitRes[3], splitRes[1]);
     }

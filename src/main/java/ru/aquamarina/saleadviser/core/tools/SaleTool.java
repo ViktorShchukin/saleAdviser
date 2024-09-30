@@ -87,4 +87,16 @@ public interface SaleTool {
         }
         return quantityList;
     }
+
+    // todo create normal validation with checks of proper mapping to target types
+    // todo convert cost to cents
+    default String[] validateCsvFileString(String s) {
+        String[] split = s.split(";");
+        // todo replace this with normal regex
+        String quantity = split[2].split("\\.")[0].split(",")[0];
+        String cost = split[3].split("\\.")[0].split(",")[0];
+        split[2] = quantity;
+        split[3] = cost;
+        return split;
+    }
 }

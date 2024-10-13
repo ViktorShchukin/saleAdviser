@@ -16,7 +16,7 @@ import java.util.UUID;
 public class Prediction {
 
     private UUID productId;
-    private float value;
+    private double value;
     private ZonedDateTime predictionDate; // the target date of prediction
     private ZonedDateTime timestamp; // when prediction was made
 }

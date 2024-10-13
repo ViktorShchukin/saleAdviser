@@ -62,7 +62,7 @@ public class TableFunction {
      * @param dateTime passed argument
      * @return value of the passed argument
      */
-    public float getValue(ZonedDateTime dateTime) {
+    public double getValue(ZonedDateTime dateTime) {
         Duration duration = Duration.between(listDate.getFirst(), dateTime);
         if (duration.isNegative()) {
             return listQuantity[0];
@@ -94,14 +94,14 @@ public class TableFunction {
 
     // todo maybe simplify
     // todo tests
-    private float interpolate(ZonedDateTime x, ZonedDateTime x0, ZonedDateTime x1) {
+    private double interpolate(ZonedDateTime x, ZonedDateTime x0, ZonedDateTime x1) {
         long fx0 = listQuantity[listDate.indexOf(x0)];
         long fx1 = listQuantity[listDate.indexOf(x1)];
         long xMinusX0 = -Duration.between(x, x0).toDays();
         long x1MinusX0 = -Duration.between(x1, x0).toDays();
-        float deltaF = fx1 - fx0;
-        float multiplication = deltaF * xMinusX0;
-        float division = multiplication / x1MinusX0;
+        double deltaF = fx1 - fx0;
+        double multiplication = deltaF * xMinusX0;
+        double division = multiplication / x1MinusX0;
         return fx0 + division;
     }
 
@@ -109,11 +109,11 @@ public class TableFunction {
     // todo what i should do with delta
     // todo i use delta in 1 month but sales are listed with minute precision
     // todo implement normal derivative. Maybe with Gradient descent
-    public float derivative(ZonedDateTime dateTime) {
+    public double derivative(ZonedDateTime dateTime) {
         int delta = 1; // delta in months
-        float value = getValue(dateTime);
+        double value = getValue(dateTime);
         ZonedDateTime dateTimeWithDelta = dateTime.minusMonths(delta);
-        float valueWithDelta = getValue(dateTimeWithDelta);
+        double valueWithDelta = getValue(dateTimeWithDelta);
 
         return (valueWithDelta - value) / delta;
     }

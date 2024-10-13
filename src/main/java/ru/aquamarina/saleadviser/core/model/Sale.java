@@ -28,7 +28,7 @@ public class Sale implements SaleInterface {
     private int quantity;
 
     @Column(name = "cost")
-    private float cost;
+    private double cost;
 
     @Column(name = "sale_date")
     private ZonedDateTime date;

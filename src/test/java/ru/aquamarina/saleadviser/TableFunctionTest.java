@@ -17,20 +17,20 @@ import static org.junit.jupiter.api.Assertions.*;
 public class TableFunctionTest {
 
     // todo what precision i should use??? read about it
-    private static final float EPS = 0.1F;
+    private static final double EPS = 0.1F;
 
     @ParameterizedTest
     @MethodSource("testGetValueProducer")
-    void testGetValue(ZonedDateTime input, float expected) {
+    void testGetValue(ZonedDateTime input, double expected) {
         TableFunction tableFunction = prepareTableFunction();
-        float actual = tableFunction.getValue(input);
+        double actual = tableFunction.getValue(input);
         double abs = Math.abs(expected - actual);
         assertTrue(abs < EPS);
     }
 
     @ParameterizedTest
     @MethodSource("testGetValueAmountProducer")
-    void testGetValueAmount(ZonedDateTime from, ZonedDateTime to, float expected) {
+    void testGetValueAmount(ZonedDateTime from, ZonedDateTime to, double expected) {
         TableFunction tableFunction = prepareTableFunction();
         double actual = tableFunction.getValueAmount(from, to);
         double abs = Math.abs(expected - actual);

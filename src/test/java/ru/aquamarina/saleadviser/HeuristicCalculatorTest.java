@@ -14,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class HeuristicCalculatorTest {
 
-    private static final float EPS = 0.1F;
+    private static final double EPS = 0.1F;
 
     @Test
     void testPredict() {
@@ -23,8 +23,8 @@ public class HeuristicCalculatorTest {
                 6,
                 ZonedDateTime.parse("2001-08-01T00:00:00Z")
         );
-        float expected = 2;
-        float actual = calculator.predict(ZonedDateTime.parse("2001-09-01T00:00:00Z")).getValue();
+        double expected = 2;
+        double actual = calculator.predict(ZonedDateTime.parse("2001-09-01T00:00:00Z")).getValue();
         assertTrue(Math.abs(expected - actual) < EPS);
 
     }

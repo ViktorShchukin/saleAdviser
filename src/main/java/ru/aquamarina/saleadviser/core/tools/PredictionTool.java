@@ -11,7 +11,7 @@ import java.util.UUID;
 public interface PredictionTool {
 
     Prediction create(UUID productId,
-                      float value,
+                      double value,
                       ZonedDateTime predictionDate,
                       ZonedDateTime timestamp);
 }

@@ -37,8 +37,7 @@ public class HeuristicCalculator implements Calculator {
         ZonedDateTime targetDateYearBefore = targetDate.minusYears(1);
         double valueYearBefore = tableFunction.getValue(targetDateYearBefore);
         double prediction = valueYearBefore * coefficient;
-        // todo maybe i should use double anywhere instead of float???
-        return predictionTool.create(tableFunction.getProductId(), (float) prediction, targetDate, now);
+        return predictionTool.create(tableFunction.getProductId(), prediction, targetDate, now);
     }
 
 

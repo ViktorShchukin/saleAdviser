@@ -22,7 +22,7 @@ public interface SaleTool {
     Sale create(UUID id,
                 UUID productId,
                 int quantity,
-                float cost,
+                double cost,
                 ZonedDateTime date);
 
     @Mapping(target = "id", expression = "java(java.util.UUID.randomUUID())")

@@ -54,7 +54,7 @@ public class CalculatorIntegrationTest {
         ZonedDateTime beforeLast = lastValueDate.minusMonths(1);
         TableFunction tableFunction = saleTool.toTableFunction(saleInMonthList);
         Calculator calculator = new HeuristicCalculator(tableFunction, 6, beforeLast);
-        float calculationResult = calculator.predict(lastValueDate).getValue();
+        double calculationResult = calculator.predict(lastValueDate).getValue();
         assertTrue(
                 Math.abs(lastValue - calculationResult) < EPS
         );

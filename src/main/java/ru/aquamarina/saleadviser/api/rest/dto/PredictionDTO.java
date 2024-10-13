@@ -11,7 +11,7 @@ public class PredictionDTO {
     // todo can use @JsonProperty and @JsonSerialize
     // todo use javax.validation
     private UUID productId;
-    private float value;
+    private double value;
     private ZonedDateTime timestamp; // when prediction was made
     private ZonedDateTime predictionDate; // the target date of prediction
 }

@@ -10,6 +10,6 @@ import java.util.UUID;
 public interface SaleRepository extends JpaRepository<Sale, UUID> {
     List<Sale> findAllByProductId(UUID productId);
 
-    boolean existsByProductIdAndDateAndCost(UUID productId, ZonedDateTime saleDate, float Cost);
+    boolean existsByProductIdAndDateAndCost(UUID productId, ZonedDateTime saleDate, double Cost);
 
 }

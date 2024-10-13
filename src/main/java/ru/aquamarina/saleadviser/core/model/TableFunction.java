@@ -74,7 +74,7 @@ public class TableFunction {
                     return listQuantity[i];
                 } else {
                     if (Duration.between(listDate.get(i), dateTime).isPositive()
-                            &
+                            &&
                             Duration.between(listDate.get(i + 1), dateTime).isNegative()) {
                         return interpolate(dateTime, listDate.get(i), listDate.get(i + 1));
                     }
@@ -86,8 +86,8 @@ public class TableFunction {
 
     public double getValueAmount(ZonedDateTime from, ZonedDateTime to) {
         return listDate.stream()
-                .filter(dateTime -> dateTime.isAfter(from) | dateTime.isEqual(from))
-                .filter(dateTime -> dateTime.isBefore(to) | dateTime.isEqual(to))
+                .filter(dateTime -> dateTime.isAfter(from) || dateTime.isEqual(from))
+                .filter(dateTime -> dateTime.isBefore(to) || dateTime.isEqual(to))
                 .mapToDouble(this::getValue)
                 .sum();
     }

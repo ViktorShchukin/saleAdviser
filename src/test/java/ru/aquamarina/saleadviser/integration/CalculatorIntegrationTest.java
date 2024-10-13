@@ -1,4 +1,4 @@
-package ru.aquamarina.saleadviser;
+package ru.aquamarina.saleadviser.integration;
 
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
@@ -7,10 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
-import org.springframework.test.context.web.WebAppConfiguration;
-import ru.aquamarina.saleadviser.config.ApiRestConfig;
-import ru.aquamarina.saleadviser.config.CalculatorProperties;
+import ru.aquamarina.saleadviser.SaleadviserApplication;
 import ru.aquamarina.saleadviser.core.calculator.Calculator;
 import ru.aquamarina.saleadviser.core.calculator.HeuristicCalculator;
 import ru.aquamarina.saleadviser.core.model.Product;

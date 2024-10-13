@@ -1,4 +1,4 @@
-package ru.aquamarina.saleadviser;
+package ru.aquamarina.saleadviser.unit;
 
 import org.junit.jupiter.api.Test;
 import ru.aquamarina.saleadviser.core.calculator.Calculator;

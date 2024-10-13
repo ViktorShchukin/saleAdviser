@@ -1,10 +1,8 @@
 package ru.aquamarina.saleadviser.core.calculator;
 
-import ru.aquamarina.saleadviser.config.CalculatorProperties;
 import ru.aquamarina.saleadviser.core.model.TableFunction;
 
 import java.util.Locale;
-import java.util.Optional;
 
 public class CalculatorFactory {
 
@@ -14,14 +12,16 @@ public class CalculatorFactory {
         this.calculatorProperties = calculatorProperties;
     }
 
-    public Calculator getCalculator(TableFunction tableFunction) {
-        String calcName = calculatorProperties.getDefaultCalculator().toLowerCase(Locale.ROOT);
+    public Calculator getDefault(TableFunction tableFunction) {
+        return getCalculator(tableFunction, calculatorProperties.getDefaultCalculator());
+    }
+
+    public Calculator getCalculator(TableFunction tableFunction, CalculatorProperties.CalculatorId id) {
         Calculator calculator;
-        return switch (calcName) {
-            case "simplecalculator" -> new SimpleCalculator(tableFunction);
-            case "heuristiccalculator" ->
+        return switch (id) {
+            case SIMPLE -> new SimpleCalculator(tableFunction);
+            case HEURISTIC ->
                     new HeuristicCalculator(tableFunction, calculatorProperties.getHeuristic().getMonthToCompare());
-            default -> new HeuristicCalculator(tableFunction, calculatorProperties.getHeuristic().getMonthToCompare());
         };
 
     }

@@ -1,4 +1,4 @@
-package ru.aquamarina.saleadviser;
+package ru.aquamarina.saleadviser.unit;
 
 import org.assertj.core.api.AssertionsForClassTypes;
 import org.junit.jupiter.api.Test;

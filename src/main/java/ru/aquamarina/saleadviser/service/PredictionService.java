@@ -30,7 +30,7 @@ public class PredictionService {
     }
 
     private Prediction getPrediction(TableFunction tableFunction, ZonedDateTime targetDate) {
-        Calculator calculator = calculatorFactory.getCalculator(tableFunction);
+        Calculator calculator = calculatorFactory.getDefault(tableFunction);
         return calculator.predict(targetDate);
     }
 
